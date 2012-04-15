@@ -1,6 +1,6 @@
 
 body {
-	padding-top: 90px;
+	padding-top: 60px;
 }
 
 i {
@@ -44,14 +44,14 @@ i {
 	font-family: arial,sans-serif;
 }
 
-#cabbage{
-	border:solid;
-	border-color:black;
-	margin-left:auto;
-	margin-right:auto;
-	width: 400px;
-	
-	
+@media (min-width: 980px) {
+	#cabbage{
+		border:solid;
+		border-color:black;
+		margin-left:auto;
+		margin-right:auto;
+		width: 300px;
+	}
 }
 
 

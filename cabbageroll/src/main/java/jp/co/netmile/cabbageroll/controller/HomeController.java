@@ -53,4 +53,14 @@ public class HomeController {
 		modelAndView.setViewName("main/result");
 		return modelAndView;
 	}
+	
+	@RequestMapping(value = "/test")
+	public ModelAndView test(AnswerForm answerForm) {
+		
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("enq", enqService.getEnqRandomly());
+		modelAndView.setViewName("main/result");
+		return modelAndView;
+	}
 }
