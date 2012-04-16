@@ -26,8 +26,9 @@
 					</c:if>
 					<c:if test="<%= SecurityContext.userSignedIn() %>">
 						<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#"> User <b class="caret"></b></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <img id="profileImgS" src="https://graph.facebook.com/<%= SecurityContext.getCurrentUser().getpId() %>/picture" /> User <b class="caret"></b></a>
 							<ul class="dropdown-menu">
+								<a href="<c:url value="./create_init" />"><i class="icon-pencil"></i>Create</a>
 								<a href="./mypage"><i class="icon-user"></i>My Page</a>
 								<a href="<c:url value="/signout" />"><i class="icon-off"></i>Sign Out</a>
 							</ul>

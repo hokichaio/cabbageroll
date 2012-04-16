@@ -9,8 +9,6 @@ public class Question {
 	
 	private Multimedia multimedia;
 	
-	private String title;
-	
 	private String description;
 	
 	private List<Choice> choices;
@@ -21,14 +19,6 @@ public class Question {
 
 	public void setMultimedia(Multimedia multimedia) {
 		this.multimedia = multimedia;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public String getDescription() {

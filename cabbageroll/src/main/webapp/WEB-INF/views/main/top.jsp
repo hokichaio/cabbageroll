@@ -13,8 +13,8 @@
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
 		<div id="cabbage">
+			<p>${enq.title}</p>
 			<img src="${enq.questions[qNo].multimedia.uri}" width="100"/>
-			<p>${enq.questions[qNo].title}</p>
 			<p>${enq.questions[qNo].description}</p>
 			<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
 				<c:forEach var="choice" items="${enq.questions[qNo].choices}" varStatus="status" >

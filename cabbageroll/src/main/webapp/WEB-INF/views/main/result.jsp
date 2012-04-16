@@ -16,28 +16,35 @@
 	<![endif]-->
 </head>
 <body>
-	<%@ include file="../com/header.jsp"%>	
+	<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=112651685520077";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+	<%@ include file="../com/header.jsp"%>
 	<div class="container">
 		<div id="cabbage">
-			<img src="${enq.questions[qNo].multimedia.uri}" width="100"/>
-			<p>${enq.questions[qNo].title}</p>
-			<p>${enq.questions[qNo].description}</p>
-			<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
-				<c:forEach var="choice" items="${enq.questions[qNo].choices}" varStatus="status" >
-					<p><button type="button" class="btn btn-primary" onclick="choose(${status.index});">!</button>${choice.message}</p>
-				</c:forEach>
-				<input type="hidden" name="enqId" value="${enq.id}"/>
-				<input type="hidden" name="qNo" value="${qNo}"/>
-				<input type="hidden" id="cNo" name="cNo" value=""/>
-			</form:form>
+			<p>${result.title}</p>
 			<br/>
 			<table class="pieChart">
-			    <tr><th>Browser</th> <th>Value</th> <th>PPL</th></tr>
-			    <tr><td>Safari </td> <td>180  </td> <td><img id="profileImgS" src="https://graph.facebook.com/6544325/picture" /><img id="profileImgS" src="https://graph.facebook.com/654217325/picture" /></td></tr>
-			    <tr><td>Firefox</td> <td>210  </td> <td>peter</td></tr>
-			    <tr><td>IE     </td> <td>30   </td> <td>Kevin</td></tr>
-			    <tr><td>Opera  </td> <td>120  </td> <td>gaya</td></tr>
+			    <!-- <tr><th>Choice</th> <th>Value</th> <th>PPL</th></tr> -->
+				<c:forEach var="choice" items="${result.choices}" varStatus="status" >
+					<tr>
+						<td>${choice.message}</td>
+						<td>${choice.answers.size()}</td>
+						<td>
+							<c:forEach var="friend" items="${choice.friends}" varStatus="status" >
+								<img width="25" src="https://graph.facebook.com/${friend}/picture" />
+							</c:forEach>
+						</td>
+					</tr>
+				</c:forEach>
 			</table>
+			<div class="fb-like" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-send="false" data-layout="button_count" data-width="300" data-show-faces="true" data-font="segoe ui"></div>
+			<div class="fb-comments" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-num-posts="2" data-width="300"></div>
 		</div>
 	</div>
 </body>

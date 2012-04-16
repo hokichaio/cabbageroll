@@ -3,9 +3,11 @@ package jp.co.netmile.cabbageroll.social;
 import javax.servlet.http.HttpServletResponse;
 
 import jp.co.netmile.cabbageroll.mapper.UserUtilityMapper;
+import jp.co.netmile.cabbageroll.service.FacebookService;
 import jp.co.netmile.cabbageroll.util.UserCookieGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.SignInAdapter;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -17,7 +19,7 @@ private final UserCookieGenerator userCookieGenerator = new UserCookieGenerator(
 	
 	@Autowired
 	private UserUtilityMapper userUtilityMapper;
-
+	
 	public String signIn(String userId, Connection<?> connection, NativeWebRequest request) {
 		String pId = userUtilityMapper.getUserFacebookIdByUserId(userId);
 		SecurityContext.setCurrentUser(new User(userId, pId));
@@ -30,5 +32,6 @@ private final UserCookieGenerator userCookieGenerator = new UserCookieGenerator(
 		}
 		return "/";
 	}
+	
 
 }

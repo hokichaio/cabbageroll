@@ -22,6 +22,10 @@ public class SignUp implements ConnectionSignUp {
 	public String execute(Connection<?> connection) {
 		String pid = connection.getKey().getProviderUserId();
 		String userId = userUtilityMapper.getUserIdByProviderUserId(pid);
-		return (userId==null) ?  userUtilityMapper.getSequenceId() : userId;
+		if(userId == null) {
+			userUtilityMapper.increseSequence();
+			return userUtilityMapper.getSequenceId();
+		}
+		else return userId;
 	}
 }

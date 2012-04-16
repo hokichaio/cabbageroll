@@ -9,10 +9,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Enq {
 	
+	public static final int TYPE_SQ = 1;
+	
+	public static final int TYPE_LQ = 2;
+	
 	@Id
 	private String id;
 	
 	private Integer type;
+	
+	private String title;
 	
 	private List<Question> questions;
 	
@@ -34,6 +40,14 @@ public class Enq {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+	
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public List<Question> getQuestions() {
