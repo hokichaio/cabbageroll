@@ -1,5 +1,6 @@
 package jp.co.netmile.cabbageroll.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import jp.co.netmile.cabbageroll.dto.AnswerForm;
@@ -36,7 +37,7 @@ public class HomeController {
 		}
 		
 		if(enq==null) {
-			//TODO 答えられるアンケートがないと表示
+			return new ModelAndView("main/noEnq");
 		}
 		
 		ModelAndView modelAndView = new ModelAndView();
@@ -95,7 +96,7 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/create")
-	public ModelAndView create(Enq enq) {
+	public ModelAndView create(Enq enq) throws IllegalStateException, IOException {
 		
 		if(!SecurityContext.userSignedIn()) {
 			return home();
@@ -115,10 +116,10 @@ public class HomeController {
 		
 		List<String> friends = facebookService.getFriends(SecurityContext.getCurrentUser().getpId());
 		Result result = enqService.getResult(enqId, SecurityContext.getCurrentUser().getpId(), friends);
-		
+		Enq enq = enqService.getEnqById(enqId);
 		if(result == null) {
 			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.addObject("enq", enqService.getEnqById(enqId));
+			modelAndView.addObject("enq", enq);
 			modelAndView.addObject("qNo", 0);
 			modelAndView.addObject("answerForm", new AnswerForm());
 			modelAndView.setViewName("main/top");
@@ -126,6 +127,7 @@ public class HomeController {
 		} else {
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("result", result);
+			modelAndView.addObject("enq", enq);
 			modelAndView.setViewName("main/result");
 			return modelAndView;
 		}
@@ -142,4 +144,5 @@ public class HomeController {
 		modelAndView.setViewName("main/mypage");
 		return modelAndView;
 	}
+	
 }

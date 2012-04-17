@@ -12,19 +12,9 @@
 <body>
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
-	<div class="row">
-		<div class="span2">
-			<%@ include file="../com/search_form.jsp"%>	
+		<div id="cabbage">
+			<h1>WHAT!? NO ENQ...</h1>
 		</div>
-		<div class="span10">
-			<c:forEach var="gift" items="${gifts}" >
-				<div id="gift_box">
-					<a href="./gift_detail?id=${gift.id}"><img src="./resources/img/gift/${gift.id}_main.jpg" /></a>
-					<p>${gift.name}</p>
-				</div>
-			</c:forEach>
-		</div>
-	</div>
 	</div>
 </body>
 </html>

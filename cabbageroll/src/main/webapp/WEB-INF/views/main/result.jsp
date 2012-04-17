@@ -27,6 +27,30 @@
 	<%@ include file="../com/header.jsp"%>
 	<div class="container">
 		<div id="cabbage">
+		<ul class="nav nav-tabs">
+			<li><a href="#question" data-toggle="tab">Question</a></li>
+			<li class="active"><a href="#result" data-toggle="tab">Result</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane" id="question">
+				<p>${enq.title}</p>
+				<c:if test="${enq.questions[0].multimedia.type == 1}">
+					<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[0].multimedia.uri}" width="100"/>
+				</c:if>
+				<c:if test="${enq.questions[0].multimedia.type == 2}">
+					<iframe width="560" height="315" src="http://www.youtube.com/embed/${enq.questions[0].multimedia.uri}" frameborder="0" allowfullscreen></iframe>
+				</c:if>
+				<c:if test="${enq.questions[0].multimedia.type == 3}">
+					<img src="${enq.questions[0].multimedia.uri}" width="100"/>
+				</c:if>
+				<p>${enq.questions[0].description}</p>
+				<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
+					<c:forEach var="choice" items="${enq.questions[0].choices}" varStatus="status" >
+						<p>${status.index+1}. ${choice.message}</p>
+					</c:forEach>
+				</form:form>
+			</div>
+			<div class="tab-pane active" id="result">
 			<p>${result.title}</p>
 			<br/>
 			<table class="pieChart">
@@ -43,8 +67,10 @@
 					</tr>
 				</c:forEach>
 			</table>
-			<div class="fb-like" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-send="false" data-layout="button_count" data-width="300" data-show-faces="true" data-font="segoe ui"></div>
-			<div class="fb-comments" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-num-posts="2" data-width="300"></div>
+			<div class="fb-like" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-send="false" data-layout="button_count" data-show-faces="true" data-font="segoe ui"></div>
+			<div class="fb-comments" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-num-posts="2" ></div>
+			</div>
+		</div>
 		</div>
 	</div>
 </body>

@@ -11,8 +11,9 @@
 <body>
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
+	<div id="cabbage">
 		<ul class="nav nav-tabs">
-			<li class="dropdown">
+			<li class="dropdown active">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#">Me<b class="caret"></b></a>
 			    <ul class="dropdown-menu">
 					<li><a href="#history" data-toggle="tab">History</a></li>
@@ -40,6 +41,7 @@
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 <script>
 getMe = function() {

@@ -14,7 +14,15 @@
 	<div class="container">
 		<div id="cabbage">
 			<p>${enq.title}</p>
-			<img src="${enq.questions[qNo].multimedia.uri}" width="100"/>
+			<c:if test="${enq.questions[qNo].multimedia.type == 1}">
+				<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[qNo].multimedia.uri}" width="100"/>
+			</c:if>
+			<c:if test="${enq.questions[qNo].multimedia.type == 2}">
+				<iframe width="560" height="315" src="http://www.youtube.com/embed/${enq.questions[qNo].multimedia.uri}" frameborder="0" allowfullscreen></iframe>
+			</c:if>
+			<c:if test="${enq.questions[qNo].multimedia.type == 3}">
+				<img src="${enq.questions[qNo].multimedia.uri}" width="100"/>
+			</c:if>
 			<p>${enq.questions[qNo].description}</p>
 			<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
 				<c:forEach var="choice" items="${enq.questions[qNo].choices}" varStatus="status" >

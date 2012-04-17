@@ -1,9 +1,13 @@
 package jp.co.netmile.cabbageroll.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -13,6 +17,7 @@ import jp.co.netmile.cabbageroll.dto.AnswerForm;
 import jp.co.netmile.cabbageroll.dto.Choice;
 import jp.co.netmile.cabbageroll.dto.ChoiceAsResult;
 import jp.co.netmile.cabbageroll.dto.Enq;
+import jp.co.netmile.cabbageroll.dto.Multimedia;
 import jp.co.netmile.cabbageroll.dto.Question;
 import jp.co.netmile.cabbageroll.dto.Result;
 
@@ -22,11 +27,14 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class EnqService {
 	
 	private static final int DAYS = Integer.parseInt(ResourceBundle.getBundle("k").getString("enq_exist_day"));
+	
+	private static final String FILE_DEST = ResourceBundle.getBundle("k").getString("file_dest");
 	
 	private static final int DAYS_IN_MILLISECOND = 1000*60*60*24*DAYS;
 	
@@ -64,7 +72,9 @@ public class EnqService {
 		
 	}
 	
-	public void createEnq(Enq enq) {
+	public void createEnq(Enq enq) throws IllegalStateException, IOException {
+		
+		//Questions&Choicesの整理
 		List<Question> arrangedQuestions = new ArrayList<Question>();
 		for(Question q : enq.getQuestions()) {
 			if(q.getChoices() != null) {
@@ -72,7 +82,6 @@ public class EnqService {
 			}
 		}
 		enq.setQuestions(arrangedQuestions);
-		
 		for(Question q : enq.getQuestions()) {
 			List<Choice> arrangedChoices = new ArrayList<Choice>();
 			for(Choice c : q.getChoices()) {
@@ -83,10 +92,49 @@ public class EnqService {
 			q.setChoices(arrangedChoices);
 		}
 		
+		//END_DATEの計算
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.MILLISECOND, DAYS_IN_MILLISECOND);
 		enq.setEndDate(now.getTime());
+		
+		//画像を一時保存
+		Map<Integer,MultipartFile> fileMap = null;
+		for(int i= 0; i<=enq.getQuestions().size()-1; i++) {
+			MultipartFile file = enq.getQuestions().get(i).getMultimedia().getFile();
+			if(file != null && !file.isEmpty()) {
+				fileMap = new HashMap<Integer,MultipartFile>();
+				fileMap.put(i, file);
+			} else {
+				if(enq.getQuestions().get(i).getMultimedia().getType() == Multimedia.TYPE_YOUTUBE) {
+					String uri = enq.getQuestions().get(i).getMultimedia().getUri();
+					if(uri != null && !uri.isEmpty()) {
+						uri = uri.split("v=")[1].split("&")[0];
+						enq.getQuestions().get(i).getMultimedia().setUri(uri);
+					}
+				} 
+			}
+			enq.getQuestions().get(i).getMultimedia().setFile(null);
+		}
+		
+		//Insert&Init
 		mongoOperations.insert(enq);
+		
+		//画像のDESTを決める
+		if(fileMap!=null) {
+			for (Integer qno : fileMap.keySet()) {
+				MultipartFile file = fileMap.get(qno);
+				String subName = file.getOriginalFilename().split("\\.")[1];
+				String fileName = enq.getOwner() + "_" + enq.getId() + "_" + qno + "." + subName;
+				File dest = new File(FILE_DEST + fileName);
+	        	file.transferTo(dest);
+	        	
+	        	Query query = Query.query(Criteria.where("_id").is(enq.getId()));
+	        	Update update = new Update();
+	        	update.set("questions."+ qno +".multimedia.uri", fileName);
+	        	mongoOperations.updateFirst(query, update, Enq.class);
+			}
+		}
+		
 		initPool();
 	}
 	
@@ -98,6 +146,7 @@ public class EnqService {
 	}
 	
 	public Enq getEnqRandomly() {
+		if(enqPool == null || enqPool.isEmpty()) return null;
 		Random random = new Random();
 		return enqPool.get(random.nextInt(enqPool.size()));
 	}
