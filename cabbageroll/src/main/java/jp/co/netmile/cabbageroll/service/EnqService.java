@@ -169,6 +169,11 @@ public class EnqService {
 		return mongoOperations.find(query, Enq.class);
 	}
 	
+	public List<Enq> getMyEnq(String pid) {
+		Query query = Query.query(Criteria.where("owner").in(pid));
+		return mongoOperations.find(query, Enq.class);
+	}
+	
 	@PostConstruct
 	public void initPool() {
 		this.enqPool = mongoOperations.findAll(Enq.class);

@@ -51,6 +51,7 @@
 				</form:form>
 			</div>
 			<div class="tab-pane active" id="result">
+			<img width="50" src="https://graph.facebook.com/${enq.owner}/picture" /> ask you:
 			<p>${result.title}</p>
 			<br/>
 			<table class="pieChart">

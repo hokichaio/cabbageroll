@@ -83,10 +83,10 @@ $(function() {
 	$("#media_flg").click(function() {
 		if($("#media_flg").is(':checked')) {
 			$(".media_type").removeAttr("disabled");
-			$("#media_content").css("display","run-in");
+			$("#media_content").show();
 		} else {
 			$(".media_type").attr("disabled", "disabled" );
-			$("#media_content").css("display","none");
+			$("#media_content").hide();
 		}
   	});
 });

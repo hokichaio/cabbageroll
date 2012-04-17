@@ -15,6 +15,7 @@
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
 		<div id="cabbage">
+			<img width="50" src="https://graph.facebook.com/${enq.owner}/picture" /> ask you:
 			<p>${enq.title}</p>
 			<c:if test="${enq.questions[qNo].multimedia.type == 1}">
 				<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[qNo].multimedia.uri}" width="100"/>
@@ -37,26 +38,35 @@
 		</div>
 	</div>
 <script type="text/javascript">
-var flg = ${postWallFlg};
 choose = function(cNo) {
 	$("#cNo").val(cNo);
 	document.answerForm.submit();
 }
 FB.init({appId: '112651685520077', xfbml: true, cookie: true});
 postWall = function() {
-	var messageStr = 'I just create an ENQ!';
+	var messageStr = '${enq.title}<br/>${enq.questions[qNo].description}';
+	var pic = ''
 	FB.ui({ 
 		method: 'feed',
 		caption: messageStr,
 		name: 'Playing With Cabbageroll Now',
+		<c:if test="${enq.questions[qNo].multimedia.type == 1}">
+			picture: 'http://<%= request.getServerName() %><%= request.getContextPath() %>/resources/test/${enq.questions[qNo].multimedia.uri}"',
+		</c:if>
+		<c:if test="${enq.questions[qNo].multimedia.type == 2}">
+			picture: 'http://www.youtube.com/embed/${enq.questions[qNo].multimedia.uri}',
+		</c:if>
+		<c:if test="${enq.questions[qNo].multimedia.type == 3}">
+			picture: '${enq.questions[qNo].multimedia.uri}',
+		</c:if>
 		link: 'http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${enq.id}'
-	}, function(response) {
-	   
 	});
 }
-$(function(flg) {
-	postWall();
-});
+<c:if test="${postWallFlg}">
+	$(function() {
+		postWall();
+	});
+</c:if>
 </script>
 </body>
 </html>

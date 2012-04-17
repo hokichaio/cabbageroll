@@ -53,34 +53,12 @@ public class HomeController {
 		
 		if(!SecurityContext.userSignedIn()) {
 			return new ModelAndView("/signin");
-			//TODO need redirect...
 		}
 		
 		enqService.registAnswer(answerForm, SecurityContext.getCurrentUser().getpId());
 		
-		return result(answerForm.getEnqId());
+		return gotoEnq(answerForm.getEnqId());
 	}
-	
-	@RequestMapping(value = "/result")
-	public ModelAndView result(@RequestParam("enqId") String enqId) {
-		
-		if(!SecurityContext.userSignedIn()) {
-			return home();
-		}
-		
-		List<String> friends = facebookService.getFriends(SecurityContext.getCurrentUser().getpId());
-		Result result = enqService.getResult(enqId, SecurityContext.getCurrentUser().getpId(), friends);
-		
-		if(result == null) {
-			return home();
-		}
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("result", result);
-		modelAndView.setViewName("main/result");
-		return modelAndView;
-	}
-	
 	
 	@RequestMapping(value = "/create_init")
 	public ModelAndView createInit(Enq enq) {
@@ -147,6 +125,7 @@ public class HomeController {
 		}
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("enqs", enqService.getHistory(SecurityContext.getCurrentUser().getpId()));
+		modelAndView.addObject("myenqs", enqService.getMyEnq(SecurityContext.getCurrentUser().getpId()));
 		modelAndView.setViewName("main/mypage");
 		return modelAndView;
 	}
