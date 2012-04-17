@@ -104,7 +104,13 @@ public class HomeController {
 		enq.setOwner(SecurityContext.getCurrentUser().getpId());
 		enqService.createEnq(enq);
 		
-		return gotoEnq(enq.getId());
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("enq", enqService.getEnqById(enq.getId()));
+		modelAndView.addObject("qNo", 0);
+		modelAndView.addObject("postWallFlg", true);
+		modelAndView.addObject("answerForm", new AnswerForm());
+		modelAndView.setViewName("main/top");
+		return modelAndView;
 	}
 	
 	@RequestMapping(value = "/goto") 

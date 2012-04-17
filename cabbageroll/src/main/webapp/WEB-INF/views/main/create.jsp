@@ -10,8 +10,6 @@
 	<%@ include file="../com/meta.jsp"%>
 </head>
 <body>
-	<script src="http://connect.facebook.net/en_US/all.js"></script>
-    <div id="fb-root"></div>
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
 	<div id="cabbage">
@@ -72,7 +70,7 @@
 					</div>
 				</div>
 				<div class="form-actions">
-					<input type="button" class="btn btn-primary" value="Create!" onclick="postWall()">
+					<input type="submit" class="btn btn-primary" value="Create!" />
 				</div>
 			</fieldset>
 		</form:form>
@@ -115,19 +113,6 @@ addChoice = function() {
 }
 removeChoice = function(i) {
 	$(".c" + i).remove();
-}
-FB.init({appId: '112651685520077', xfbml: true, cookie: true});
-postWall = function() {
-	var messageStr = 'I just create an ENQ!';
-	FB.ui({ 
-		method: 'feed',
-		caption: messageStr,
-		name: 'Play Critical Mass Now',
-		picture: 'IMAGE_URL',
-		link: 'CANVAS_PAGE_URL'
-	}, function(response) {
-	   document.enq.submit();
-	});
 }
 </script>
 </html>

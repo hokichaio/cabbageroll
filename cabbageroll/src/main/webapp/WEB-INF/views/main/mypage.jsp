@@ -43,21 +43,5 @@
 		</div>
 	</div>
 	</div>
-<script>
-getMe = function() {
-	$.ajax({
-		type: "GET",
-		url: "./async/me",
-		dataType: "html"
-	});
-};
-getFriend = function() {
-	$.ajax({
-		type: "GET",
-		url: "./async/friend",
-		dataType: "html"
-	});
-}
-</script>	
 </body>
 </html>

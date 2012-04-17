@@ -10,6 +10,8 @@
 	<%@ include file="../com/meta.jsp"%>	
 </head>
 <body>
+	<script src="http://connect.facebook.net/en_US/all.js"></script>
+    <div id="fb-root"></div>
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
 		<div id="cabbage">
@@ -35,10 +37,26 @@
 		</div>
 	</div>
 <script type="text/javascript">
-	choose = function(cNo) {
-		$("#cNo").val(cNo);
-		document.answerForm.submit();
-	}
+var flg = ${postWallFlg};
+choose = function(cNo) {
+	$("#cNo").val(cNo);
+	document.answerForm.submit();
+}
+FB.init({appId: '112651685520077', xfbml: true, cookie: true});
+postWall = function() {
+	var messageStr = 'I just create an ENQ!';
+	FB.ui({ 
+		method: 'feed',
+		caption: messageStr,
+		name: 'Playing With Cabbageroll Now',
+		link: 'http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${enq.id}'
+	}, function(response) {
+	   
+	});
+}
+$(function(flg) {
+	postWall();
+});
 </script>
 </body>
 </html>
