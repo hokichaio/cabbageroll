@@ -1,5 +1,7 @@
 package jp.co.netmile.cabbageroll.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import jp.co.netmile.cabbageroll.dto.AnswerForm;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -34,5 +37,24 @@ public class AsyncController {
 		modelAndView.addObject("enqs", enqService.getHistory(SecurityContext.getCurrentUser().getpId()));
 		modelAndView.setViewName("async/me");
 		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/upload")
+	public String handleFormUpload(@RequestParam("file") MultipartFile file,@RequestParam("userId") String userId, @RequestParam("enqId") String enqId) throws IOException {
+
+	        if (!file.isEmpty()) {
+	        	
+	        	String type = file.getContentType();
+	        	String name = file.getOriginalFilename();
+	        	
+	        	String fileName = name.split("\\.")[1];
+	        	
+	        	File dest = new File("/test/" + enqId + "_" + userId + "." + fileName);
+	        	file.transferTo(dest);
+	        	
+	           return "redirect:uploadSuccess";
+	       } else {
+	           return "redirect:uploadFailure";
+	       }
 	}
 }

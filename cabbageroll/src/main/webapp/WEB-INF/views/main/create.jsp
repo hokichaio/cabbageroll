@@ -5,14 +5,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
-<html>
+<html xmlns:fb="http://www.facebook.com/2008/fbml">
 <head>
 	<%@ include file="../com/meta.jsp"%>
 </head>
 <body>
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
-		<form:form class="form-horizontal" id="enq" modelAttribute="enq" name="enq" action="./create" method="post">
+	<div id="cabbage">
+		<form:form class="form-horizontal" id="enq" modelAttribute="enq" name="enq" action="./create" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<legend>Create a cabbageroll</legend>
 				<div class="control-group">
@@ -26,7 +27,7 @@
 				<div class="control-group">
 					<label class="control-label" for="title">Title</label>
 					<div class="controls docs-input-sizes">
-			        	<form:input class="input-xlarge focused" id="title" path="title" />
+			        	<form:input class="input-xlarge" id="title" path="title" />
 					</div>
 				</div>
 				<div class="control-group">
@@ -41,18 +42,26 @@
 					<label class="control-label" >Media Type</label>
 					<div class="controls">
 						<label class="radio">
-			                <form:radiobutton class="media_type" path="questions[0].multimedia.type" value="1" /> Upload a file
+			                <form:radiobutton id="media_type_radio_1" class="media_type" path="questions[0].multimedia.type" value="1" /> Upload a file
         				</label>
         				<label class="radio">
-			                <form:radiobutton class="media_type" path="questions[0].multimedia.type" value="2" /> Place a youtube link
+			                <form:radiobutton id="media_type_radio_2" class="media_type" path="questions[0].multimedia.type" value="2" /> Place a youtube link
         				</label>
+        				<label class="radio">
+			                <form:radiobutton id="media_type_radio_3" class="media_type" path="questions[0].multimedia.type" value="3" /> Place an image link
+        				</label>
+	        			<label>
+	        				<input class="media_type" type="file" name="questions[0].multimedia.file" id="media_fileuploader" style="display:none;"/>
+	        			</label>
+        				<label>
+	        				<form:input class="media_type input-xlarge" path="questions[0].multimedia.uri" id="media_uri" style="display:none;"/>
+	        			</label>
 					</div>
 				</div>
 				<div class="control-group">
 					<label class="control-label" for="title">Description</label>
 					<div class="controls">
-			        	<textarea id="text_description" cols="320" rows="5"></textarea>
-			        	<form:hidden id="description" path="questions[0].description"/>
+			        	<form:textarea path="questions[0].description" cols="320" rows="5" />
 					</div>
 				</div>
 				<div class="control-group">
@@ -60,9 +69,12 @@
 					<div class="controls" id="choice_list">
 					</div>
 				</div>
+				<div class="form-actions">
+					<input type="submit" class="btn btn-primary" value="Create!" />
+				</div>
 			</fieldset>
-			<button class="btn btn-primary" onclick="submitForm()">Create!</button>
 		</form:form>
+	</div>
 	</div>
 </body>
 <script>
@@ -71,17 +83,27 @@ $(function() {
 	$("#media_flg").click(function() {
 		if($("#media_flg").is(':checked')) {
 			$(".media_type").removeAttr("disabled");
-			$("#media_content").css("display","run-in");
+			$("#media_content").show();
 		} else {
 			$(".media_type").attr("disabled", "disabled" );
-			$("#media_content").css("display","none");
+			$("#media_content").hide();
 		}
   	});
 });
-submitForm = function() {
-	$("#description").val($("#text_description").val());
-	doucument.enq.submit();
-}
+$(function() {
+	$("#media_type_radio_1").click(function() {
+		$("#media_uri").css("display","none");
+		$("#media_fileuploader").css("display","run-in");
+  	});
+	$("#media_type_radio_2").click(function() {
+		$("#media_fileuploader").css("display","none");
+		$("#media_uri").css("display","run-in");
+  	});
+	$("#media_type_radio_3").click(function() {
+		$("#media_fileuploader").css("display","none");
+		$("#media_uri").css("display","run-in");
+  	});
+});
 addChoice = function() {
 	$("#choice_list").append("<label class='c" + i + "' class='text'>");
 	$("#choice_list").append("<input type='text' class='c" + i + "' name='questions[0].choices[" + i + "].message' />");
@@ -92,6 +114,5 @@ addChoice = function() {
 removeChoice = function(i) {
 	$(".c" + i).remove();
 }
-
 </script>
 </html>

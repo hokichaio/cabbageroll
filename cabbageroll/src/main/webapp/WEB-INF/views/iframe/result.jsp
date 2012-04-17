@@ -10,7 +10,7 @@
 	<%@ include file="../com/meta.jsp"%>
 	<link type='text/css' href='<%= request.getContextPath() %>/resources/css/piechart.css' rel='stylesheet' />
 	<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/mootools-beta-1.2b2.js"></script> 
-	<script type='text/javascript' src='<%= request.getContextPath() %>/resources/js/piechart.js'></script>
+	<script type='text/javascript' src='<%= request.getContextPath() %>/resources/js/piechart.iframe.js'></script>
 	<!--[if IE]>
 		<script type='text/javascript' src='<%= request.getContextPath() %>/resources/js/piechart.js'></script>
 	<![endif]-->
@@ -24,7 +24,6 @@
   js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=112651685520077";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
-	<%@ include file="../com/header.jsp"%>
 	<div class="container">
 		<div id="cabbage">
 		<ul class="nav nav-tabs">

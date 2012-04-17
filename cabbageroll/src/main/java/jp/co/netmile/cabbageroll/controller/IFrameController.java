@@ -1,6 +1,5 @@
 package jp.co.netmile.cabbageroll.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import jp.co.netmile.cabbageroll.dto.AnswerForm;
@@ -16,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+@RequestMapping(value = "/iframe")
 @Controller
-public class HomeController {
+public class IFrameController {
 	
 	@Autowired
 	private EnqService enqService;
@@ -28,23 +28,23 @@ public class HomeController {
 	@RequestMapping(value = "/")
 	public ModelAndView home() {
 		
-		List<Enq> enqs;
+		Enq enq;
 		
 		if(!SecurityContext.userSignedIn()) {
-			enqs = enqService.getEnqsRandomly();
+			enq = enqService.getEnqRandomly();
 		} else {
-			enqs = enqService.getAvailableEnqs(SecurityContext.getCurrentUser().getpId());
+			enq = enqService.getAvailableEnq(SecurityContext.getCurrentUser().getpId());
 		}
 		
-		if(enqs==null || enqs.isEmpty()) {
-			return new ModelAndView("main/noEnq");
+		if(enq==null) {
+			return new ModelAndView("iframe/noEnq");
 		}
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("enqs", enqs);
+		modelAndView.addObject("enq", enq);
 		modelAndView.addObject("qNo", 0);
 		modelAndView.addObject("answerForm", new AnswerForm());
-		modelAndView.setViewName("main/top");
+		modelAndView.setViewName("iframe/top");
 		return modelAndView;
 	}
 	
@@ -60,36 +60,6 @@ public class HomeController {
 		return gotoEnq(answerForm.getEnqId());
 	}
 	
-	@RequestMapping(value = "/create_init")
-	public ModelAndView createInit(Enq enq) {
-		
-		if(!SecurityContext.userSignedIn()) {
-			return home();
-		}
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("enq", enq);
-		modelAndView.setViewName("main/create");
-		return modelAndView;
-	}
-	
-	@RequestMapping(value = "/create")
-	public ModelAndView create(Enq enq) throws IllegalStateException, IOException {
-		
-		if(!SecurityContext.userSignedIn()) {
-			return home();
-		}
-		enq.setOwner(SecurityContext.getCurrentUser().getpId());
-		enqService.createEnq(enq);
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("enq", enqService.getEnqById(enq.getId()));
-		modelAndView.addObject("qNo", 0);
-		modelAndView.addObject("postWallFlg", true);
-		modelAndView.addObject("answerForm", new AnswerForm());
-		modelAndView.setViewName("main/top");
-		return modelAndView;
-	}
 	
 	@RequestMapping(value = "/goto") 
 	public ModelAndView gotoEnq(@RequestParam("enqId") String enqId) {
@@ -106,28 +76,17 @@ public class HomeController {
 			modelAndView.addObject("enq", enq);
 			modelAndView.addObject("qNo", 0);
 			modelAndView.addObject("answerForm", new AnswerForm());
-			modelAndView.setViewName("main/top");
+			modelAndView.setViewName("iframe/top");
 			return modelAndView;
 		} else {
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("result", result);
 			modelAndView.addObject("enq", enq);
-			modelAndView.setViewName("main/result");
+			modelAndView.setViewName("iframe/result");
 			return modelAndView;
 		}
 		
 	}
 	
-	@RequestMapping(value = "/mypage") 
-	public ModelAndView myPage() {
-		if(!SecurityContext.userSignedIn()) {
-			return home();
-		}
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("enqs", enqService.getHistory(SecurityContext.getCurrentUser().getpId()));
-		modelAndView.addObject("myenqs", enqService.getMyEnq(SecurityContext.getCurrentUser().getpId()));
-		modelAndView.setViewName("main/mypage");
-		return modelAndView;
-	}
 	
 }

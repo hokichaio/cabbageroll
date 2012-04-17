@@ -89,7 +89,7 @@ var PieChart = new Class({
 		}).injectBottom(this.container).addClass('pieChartMap');
 		
 		// Insert the blank transparent gif that is used for the image map
-		new Asset.image('/resources/img/com/spacer.gif', {
+		new Asset.image('../resources/img/com/spacer.gif', {
 			alt: '',
 			usemap: '#pieChartMap' + this.tableIndex,
 			width: this.pieChartDiameter,
