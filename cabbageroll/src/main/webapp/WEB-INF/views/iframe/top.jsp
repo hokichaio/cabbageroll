@@ -11,7 +11,6 @@
 </head>
 <body>
 			<img width="50" src="https://graph.facebook.com/${enq.owner}/picture" /> ask you:
-			<p>${enq.title}</p>
 			<c:if test="${enq.questions[qNo].multimedia.type == 1}">
 				<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[qNo].multimedia.uri}" width="100"/>
 			</c:if>
@@ -21,6 +20,7 @@
 			<c:if test="${enq.questions[qNo].multimedia.type == 3}">
 				<img src="${enq.questions[qNo].multimedia.uri}" width="100"/>
 			</c:if>
+			<h3>${enq.title}</h3>
 			<p>${enq.questions[qNo].description}</p>
 			<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
 				<c:forEach var="choice" items="${enq.questions[qNo].choices}" varStatus="status" >

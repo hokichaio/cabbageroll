@@ -13,7 +13,9 @@
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
 		<div id="cabbage">
-			<h1>WHAT!? NO ENQ...</h1>
+			<div style="text-align:center;">
+				<h1>WHAT!? NO ENQ...</h1>
+			</div>
 		</div>
 	</div>
 </body>

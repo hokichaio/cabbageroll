@@ -23,7 +23,8 @@ body {
 		margin-left:auto;
 		margin-right:auto;
 		padding:10px;
-		width: 560px;
+		width: 570px;
+		height: 800px;
 	}
 }
 
@@ -32,8 +33,11 @@ body {
 	border-color:black;
 	padding:10px;
 	background-color: white;
-	width: 570px;
+	width: 600px;
 	height: 750px;
 }
 
+.list {
+	margin-top: 10px;
+}
 	

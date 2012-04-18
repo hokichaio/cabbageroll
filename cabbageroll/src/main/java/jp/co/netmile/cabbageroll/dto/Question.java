@@ -36,5 +36,13 @@ public class Question {
 	public void setChoices(List<Choice> choices) {
 		this.choices = choices;
 	}
+	
+	public int countAnswered() {
+		int i = 0;
+		for(Choice c : choices) {
+			i += c.getAnswers().size();
+		}
+		return i;
+	}
 
 }

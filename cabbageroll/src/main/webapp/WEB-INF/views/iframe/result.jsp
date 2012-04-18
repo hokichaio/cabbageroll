@@ -32,7 +32,6 @@
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane" id="question">
-				<p>${enq.title}</p>
 				<c:if test="${enq.questions[0].multimedia.type == 1}">
 					<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[0].multimedia.uri}" width="100"/>
 				</c:if>
@@ -42,6 +41,7 @@
 				<c:if test="${enq.questions[0].multimedia.type == 3}">
 					<img src="${enq.questions[0].multimedia.uri}" width="100"/>
 				</c:if>
+				<h3>${enq.title}</h3>
 				<p>${enq.questions[0].description}</p>
 				<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
 					<c:forEach var="choice" items="${enq.questions[0].choices}" varStatus="status" >
@@ -50,8 +50,9 @@
 				</form:form>
 			</div>
 			<div class="tab-pane active" id="result">
-			<img width="50" src="https://graph.facebook.com/${enq.owner}/picture" /> ask you:
-			<p>${result.title}</p>
+			<img id="profile_frame" src="<%= request.getContextPath() %>/resources/img/com/profile_frame.jpg" />
+			<img id="profile_img" width="50" src="https://graph.facebook.com/${enq.owner}/picture" />
+			${result.title}
 			<br/>
 			<table class="pieChart">
 			    <!-- <tr><th>Choice</th> <th>Value</th> <th>PPL</th></tr> -->

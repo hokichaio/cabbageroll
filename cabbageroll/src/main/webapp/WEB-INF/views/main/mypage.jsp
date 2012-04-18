@@ -27,24 +27,43 @@
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="history">
-				<c:forEach var="enq" items="${enqs}" >
-					<li><a href="./goto?enqId=${enq.id}">${enq.title}</a></li>
-				</c:forEach>
+				<h2>回答履歴</h2>
+				<br/>
+				<table class="table table-striped">
+					<tr><th>タイトル</th><th>回答者数</th></tr>
+					<c:forEach var="enq" items="${enqs}" >
+						<tr>
+							<td><a href="./goto?enqId=${enq.id}">${enq.title}</a></td>
+							<td>${enq.questions[0].countAnswered()}</td>
+						</tr>
+					</c:forEach>
+				</table>
 			</div>
 			<div class="tab-pane" id="title">
+				<h2>称号一覧</h2>
 				<div class="span12">
-					<i class="icon-glass"></i>Under Construct...
+					<i class="icon-glass"></i>制作中・・・
 				</div>
 			</div>
 			<div class="tab-pane" id="friends">
+				<h2>友達一覧</h2>
 				<div class="span12">
-					<i class="icon-glass"></i>Under Construct as well...
+					<i class="icon-glass"></i>制作中・・・
 				</div>
 			</div>
 			<div class="tab-pane" id="myenqs">
-				<c:forEach var="myenq" items="${myenqs}" varStatus="myenqs_status" >
-					<li><a href="./goto?enqId=${myenq.id}">${myenq.title}</a></li>
-				</c:forEach>
+				<h2>Myアンケート</h2>
+				<br/>
+				<table class="table table-striped">
+					<tr><th>タイトル</th><th>回答者数</th><th>削除</th></tr>
+					<c:forEach var="myenq" items="${myenqs}" >
+						<tr>
+							<td><a href="./goto?enqId=${myenq.id}">${myenq.title}</a></td>
+							<td>${myenq.questions[0].countAnswered()}</td>
+							<td><i class="icon-trash"></i></td>
+						</tr>
+					</c:forEach>
+				</table>
 			</div>
 		</div>
 	</div>

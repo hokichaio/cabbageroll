@@ -23,4 +23,13 @@ body {
 .fb-comments-custom {
 	width: 380px;
 }
-	
+
+#profile_frame {
+ position: static;	
+}
+
+#profile_img {
+ position: relative;
+ top: -14px;
+ left: -78px;	
+}
