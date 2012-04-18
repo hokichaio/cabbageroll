@@ -5,9 +5,7 @@ import java.util.List;
 
 import jp.co.netmile.cabbageroll.dto.AnswerForm;
 import jp.co.netmile.cabbageroll.dto.Enq;
-import jp.co.netmile.cabbageroll.dto.Result;
 import jp.co.netmile.cabbageroll.service.EnqService;
-import jp.co.netmile.cabbageroll.service.FacebookService;
 import jp.co.netmile.cabbageroll.social.SecurityContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +19,6 @@ public class HomeController {
 	
 	@Autowired
 	private EnqService enqService;
-	
-	@Autowired
-	private FacebookService facebookService;
 	
 	@RequestMapping(value = "/")
 	public ModelAndView home() {
@@ -46,18 +41,6 @@ public class HomeController {
 		modelAndView.addObject("answerForm", new AnswerForm());
 		modelAndView.setViewName("main/top");
 		return modelAndView;
-	}
-	
-	@RequestMapping(value = "/answer")
-	public ModelAndView answer(AnswerForm answerForm) {
-		
-		if(!SecurityContext.userSignedIn()) {
-			return new ModelAndView("/signin");
-		}
-		
-		enqService.registAnswer(answerForm, SecurityContext.getCurrentUser().getpId());
-		
-		return gotoEnq(answerForm.getEnqId());
 	}
 	
 	@RequestMapping(value = "/create_init")
@@ -83,39 +66,19 @@ public class HomeController {
 		enqService.createEnq(enq);
 		
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("enq", enqService.getEnqById(enq.getId()));
-		modelAndView.addObject("qNo", 0);
+		modelAndView.addObject("enqId", enq.getId());
 		modelAndView.addObject("postWallFlg", true);
-		modelAndView.addObject("answerForm", new AnswerForm());
-		modelAndView.setViewName("main/top");
+		modelAndView.setViewName("main/enq");
 		return modelAndView;
 	}
 	
 	@RequestMapping(value = "/goto") 
 	public ModelAndView gotoEnq(@RequestParam("enqId") String enqId) {
 		
-		if(!SecurityContext.userSignedIn()) {
-			return home();
-		}
-		
-		List<String> friends = facebookService.getFriends(SecurityContext.getCurrentUser().getpId());
-		Result result = enqService.getResult(enqId, SecurityContext.getCurrentUser().getpId(), friends);
-		Enq enq = enqService.getEnqById(enqId);
-		if(result == null) {
-			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.addObject("enq", enq);
-			modelAndView.addObject("qNo", 0);
-			modelAndView.addObject("answerForm", new AnswerForm());
-			modelAndView.setViewName("main/top");
-			return modelAndView;
-		} else {
-			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.addObject("result", result);
-			modelAndView.addObject("enq", enq);
-			modelAndView.setViewName("main/result");
-			return modelAndView;
-		}
-		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("enqId", enqId);
+		modelAndView.setViewName("main/enq");
+		return modelAndView;
 	}
 	
 	@RequestMapping(value = "/mypage") 

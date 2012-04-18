@@ -20,10 +20,10 @@
 		  
 		  	<c:forEach var="enq" items="${enqs}" varStatus="status" >
 		  		<c:if test="${status.index==0}" >
-					<div class="active item"><iframe width="580" height="800" src="<%= request.getContextPath() %>/iframe/goto?enqId=${enq.id}" seamless sandbox="allow-same-origin" frameborder=0></iframe></div>
+					<div class="active item"><iframe class="enq" src="<%= request.getContextPath() %>/iframe/goto?enqId=${enq.id}" seamless frameborder=0></iframe></div>
 				</c:if>
 				<c:if test="${status.index!=0}" >
-					<div class="item"><iframe width="580" height="800" src="<%= request.getContextPath() %>/iframe/goto?enqId=${enq.id}" seamless sandbox="allow-same-origin" frameborder=0></iframe></div>
+					<div class="item"><iframe class="enq" src="<%= request.getContextPath() %>/iframe/goto?enqId=${enq.id}" seamless frameborder=0></iframe></div>
 				</c:if>
 			</c:forEach>
 		    
@@ -34,37 +34,11 @@
 		</div>
 	</div>
 	
-	
 <script type="text/javascript">
 choose = function(cNo) {
 	$("#cNo").val(cNo);
 	document.answerForm.submit();
 }
-FB.init({appId: '112651685520077', xfbml: true, cookie: true});
-postWall = function() {
-	var messageStr = '${enq.title}<br/>${enq.questions[qNo].description}';
-	var pic = ''
-	FB.ui({ 
-		method: 'feed',
-		caption: messageStr,
-		name: 'Playing With Cabbageroll Now',
-		<c:if test="${enq.questions[qNo].multimedia.type == 1}">
-			picture: 'http://<%= request.getServerName() %><%= request.getContextPath() %>/resources/test/${enq.questions[qNo].multimedia.uri}"',
-		</c:if>
-		<c:if test="${enq.questions[qNo].multimedia.type == 2}">
-			picture: 'http://www.youtube.com/embed/${enq.questions[qNo].multimedia.uri}',
-		</c:if>
-		<c:if test="${enq.questions[qNo].multimedia.type == 3}">
-			picture: '${enq.questions[qNo].multimedia.uri}',
-		</c:if>
-		link: 'http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${enq.id}'
-	});
-}
-<c:if test="${postWallFlg}">
-	$(function() {
-		postWall();
-	});
-</c:if>
 </script>
 </body>
 </html>

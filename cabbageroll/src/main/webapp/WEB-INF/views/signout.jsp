@@ -6,7 +6,7 @@
 		<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/jquery-1.7.min.js"></script>
 		<script>
 		$(function(){ 
-			parent.location = "http://www.facebook.com/"
+			parent.location = "<%= request.getContextPath() %>"
 		});
 		</script>
 	</head>

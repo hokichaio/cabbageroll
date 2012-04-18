@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<%@ include file="../com/meta.jsp"%>
+	<%@ include file="./com/meta.jsp"%>
 	<link type='text/css' href='<%= request.getContextPath() %>/resources/css/piechart.css' rel='stylesheet' />
 	<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/mootools-beta-1.2b2.js"></script> 
 	<script type='text/javascript' src='<%= request.getContextPath() %>/resources/js/piechart.iframe.js'></script>
@@ -37,7 +37,7 @@
 					<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[0].multimedia.uri}" width="100"/>
 				</c:if>
 				<c:if test="${enq.questions[0].multimedia.type == 2}">
-					<iframe width="560" height="315" src="http://www.youtube.com/embed/${enq.questions[0].multimedia.uri}" frameborder="0" allowfullscreen></iframe>
+					<iframe class="youtube" src="http://www.youtube.com/embed/${enq.questions[0].multimedia.uri}" frameborder="0" allowfullscreen></iframe>
 				</c:if>
 				<c:if test="${enq.questions[0].multimedia.type == 3}">
 					<img src="${enq.questions[0].multimedia.uri}" width="100"/>
@@ -68,7 +68,7 @@
 				</c:forEach>
 			</table>
 			<div class="fb-like" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-send="false" data-layout="button_count" data-show-faces="true" data-font="segoe ui"></div>
-			<div class="fb-comments" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-num-posts="2" ></div>
+			<div class="fb-comments" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-num-posts="2"  ></div>
 			</div>
 		</div>
 		</div>

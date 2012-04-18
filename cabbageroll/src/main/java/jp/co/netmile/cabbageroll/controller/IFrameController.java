@@ -25,34 +25,12 @@ public class IFrameController {
 	@Autowired
 	private FacebookService facebookService;
 	
-	@RequestMapping(value = "/")
-	public ModelAndView home() {
-		
-		Enq enq;
-		
-		if(!SecurityContext.userSignedIn()) {
-			enq = enqService.getEnqRandomly();
-		} else {
-			enq = enqService.getAvailableEnq(SecurityContext.getCurrentUser().getpId());
-		}
-		
-		if(enq==null) {
-			return new ModelAndView("iframe/noEnq");
-		}
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("enq", enq);
-		modelAndView.addObject("qNo", 0);
-		modelAndView.addObject("answerForm", new AnswerForm());
-		modelAndView.setViewName("iframe/top");
-		return modelAndView;
-	}
-	
 	@RequestMapping(value = "/answer")
 	public ModelAndView answer(AnswerForm answerForm) {
 		
 		if(!SecurityContext.userSignedIn()) {
-			return new ModelAndView("/signin");
+			//TODO signin機能
+			return gotoEnq(answerForm.getEnqId());
 		}
 		
 		enqService.registAnswer(answerForm, SecurityContext.getCurrentUser().getpId());
@@ -64,13 +42,20 @@ public class IFrameController {
 	@RequestMapping(value = "/goto") 
 	public ModelAndView gotoEnq(@RequestParam("enqId") String enqId) {
 		
+		Enq enq = enqService.getEnqById(enqId);
+		
 		if(!SecurityContext.userSignedIn()) {
-			return home();
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("enq", enq);
+			modelAndView.addObject("qNo", 0);
+			modelAndView.addObject("answerForm", new AnswerForm());
+			modelAndView.setViewName("iframe/top");
+			return modelAndView;
 		}
 		
 		List<String> friends = facebookService.getFriends(SecurityContext.getCurrentUser().getpId());
 		Result result = enqService.getResult(enqId, SecurityContext.getCurrentUser().getpId(), friends);
-		Enq enq = enqService.getEnqById(enqId);
+		
 		if(result == null) {
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("enq", enq);

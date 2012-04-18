@@ -38,7 +38,7 @@
 					<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[0].multimedia.uri}" width="100"/>
 				</c:if>
 				<c:if test="${enq.questions[0].multimedia.type == 2}">
-					<iframe width="560" height="315" src="http://www.youtube.com/embed/${enq.questions[0].multimedia.uri}" frameborder="0" allowfullscreen></iframe>
+					<iframe class="youtube" src="http://www.youtube.com/embed/${enq.questions[0].multimedia.uri}" frameborder="0" allowfullscreen></iframe>
 				</c:if>
 				<c:if test="${enq.questions[0].multimedia.type == 3}">
 					<img src="${enq.questions[0].multimedia.uri}" width="100"/>

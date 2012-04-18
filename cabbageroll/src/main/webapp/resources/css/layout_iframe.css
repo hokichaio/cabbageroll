@@ -1,0 +1,26 @@
+
+body {
+	background-color: white;
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+#profileImgS {
+	width: 25px;
+	height: 25px;
+}
+
+
+* {
+	font-family: arial,sans-serif;
+}
+
+.youtube {
+	width: 530px;
+	height: 290px;
+}
+
+.fb-comments-custom {
+	width: 380px;
+}
+	

@@ -27,5 +27,13 @@ body {
 	}
 }
 
+.enq {
+	border:solid;
+	border-color:black;
+	padding:10px;
+	background-color: white;
+	width: 570px;
+	height: 750px;
+}
 
 	
