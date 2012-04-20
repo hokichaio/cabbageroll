@@ -41,9 +41,11 @@
 				<div id="media_content" class="control-group" style="display:none;">
 					<label class="control-label" >Media Type</label>
 					<div class="controls">
+						<!-- 
 						<label class="radio">
 			                <form:radiobutton id="media_type_radio_1" class="media_type" path="questions[0].multimedia.type" value="1" /> Upload a file
         				</label>
+        				 -->
         				<label class="radio">
 			                <form:radiobutton id="media_type_radio_2" class="media_type" path="questions[0].multimedia.type" value="2" /> Place a youtube link
         				</label>
@@ -92,16 +94,16 @@ $(function() {
 });
 $(function() {
 	$("#media_type_radio_1").click(function() {
-		$("#media_uri").css("display","none");
-		$("#media_fileuploader").css("display","run-in");
+		$("#media_uri").hide();
+		$("#media_fileuploader").show();
   	});
 	$("#media_type_radio_2").click(function() {
-		$("#media_fileuploader").css("display","none");
-		$("#media_uri").css("display","run-in");
+		$("#media_fileuploader").hide();
+		$("#media_uri").show();
   	});
 	$("#media_type_radio_3").click(function() {
-		$("#media_fileuploader").css("display","none");
-		$("#media_uri").css("display","run-in");
+		$("#media_fileuploader").hide();
+		$("#media_uri").show();
   	});
 });
 addChoice = function() {

@@ -4,6 +4,7 @@
          contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -32,16 +33,16 @@
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane" id="question">
+				<h3>${enq.title}</h3>
 				<c:if test="${enq.questions[0].multimedia.type == 1}">
-					<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[0].multimedia.uri}" width="100"/>
+					<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[0].multimedia.uri}"/>
 				</c:if>
 				<c:if test="${enq.questions[0].multimedia.type == 2}">
 					<iframe class="youtube" src="http://www.youtube.com/embed/${enq.questions[0].multimedia.uri}" frameborder="0" allowfullscreen></iframe>
 				</c:if>
 				<c:if test="${enq.questions[0].multimedia.type == 3}">
-					<img src="${enq.questions[0].multimedia.uri}" width="100"/>
+					<img src="${enq.questions[0].multimedia.uri}"/>
 				</c:if>
-				<h3>${enq.title}</h3>
 				<p>${enq.questions[0].description}</p>
 				<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
 					<c:forEach var="choice" items="${enq.questions[0].choices}" varStatus="status" >
@@ -59,7 +60,7 @@
 				<c:forEach var="choice" items="${result.choices}" varStatus="status" >
 					<tr>
 						<td>${choice.message}</td>
-						<td>${choice.answers.size()}</td>
+						<td>${fn:length(choice.answers)}</td>
 						<td>
 							<c:forEach var="friend" items="${choice.friends}" varStatus="status" >
 								<img width="25" src="https://graph.facebook.com/${friend}/picture" />

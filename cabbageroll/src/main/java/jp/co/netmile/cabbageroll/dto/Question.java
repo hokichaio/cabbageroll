@@ -13,6 +13,8 @@ public class Question {
 	
 	private List<Choice> choices;
 	
+	private int i;
+	
 	public Multimedia getMultimedia() {
 		return multimedia;
 	}
@@ -36,13 +38,21 @@ public class Question {
 	public void setChoices(List<Choice> choices) {
 		this.choices = choices;
 	}
-	
-	public int countAnswered() {
+
+	public int getAnswered() {
 		int i = 0;
 		for(Choice c : choices) {
 			i += c.getAnswers().size();
 		}
 		return i;
 	}
+	
+//	public int countAnswered() {
+//		int i = 0;
+//		for(Choice c : choices) {
+//			i += c.getAnswers().size();
+//		}
+//		return i;
+//	}
 
 }

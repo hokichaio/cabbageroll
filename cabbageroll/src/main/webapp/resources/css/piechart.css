@@ -7,7 +7,6 @@
 
 table.pieChart {
 	border-collapse: collapse;
-	width: 140px;	
 }
 
 table.pieChart th, table.pieChart td {
@@ -28,7 +27,7 @@ table.pieChart th {
 .pieChartWrapper img {
 	position: absolute;
 	top: 0;
-	left: 0;			
+	left: 140px;			
 }
 	
 img {

@@ -93,4 +93,9 @@ public class HomeController {
 		return modelAndView;
 	}
 	
+	@RequestMapping(value = "/reload") 
+	public void reload() {
+		enqService.initPool();
+	}
+	
 }

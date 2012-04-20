@@ -34,7 +34,7 @@
 					<c:forEach var="enq" items="${enqs}" >
 						<tr>
 							<td><a href="./goto?enqId=${enq.id}">${enq.title}</a></td>
-							<td>${enq.questions[0].countAnswered()}</td>
+							<td>${enq.questions[0].answered}</td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -59,7 +59,7 @@
 					<c:forEach var="myenq" items="${myenqs}" >
 						<tr>
 							<td><a href="./goto?enqId=${myenq.id}">${myenq.title}</a></td>
-							<td>${myenq.questions[0].countAnswered()}</td>
+							<td>${myenq.questions[0].answered}</td>
 							<td><i class="icon-trash"></i></td>
 						</tr>
 					</c:forEach>
