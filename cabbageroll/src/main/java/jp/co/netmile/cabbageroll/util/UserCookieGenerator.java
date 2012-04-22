@@ -27,29 +27,25 @@ import org.springframework.web.util.CookieGenerator;
  */
 public final class UserCookieGenerator {
 
-	private final CookieGenerator userCookieGenerator = new CookieGenerator();
+	private static final CookieGenerator userCookieGenerator = new CookieGenerator();
 	
-	public final String USER_ID = "cabbageroll";
+	public static final String USER_ID = "cabbageroll";
 	
-	public final String PROVIDER_ID = "p";
+	public static final String PROVIDER_ID = "p";
 
-//	public UserCookieGenerator() {
-//		userCookieGenerator.setCookieName("cabbageroll");
-//	}
-
-	public void addCookie(String key, String value, HttpServletResponse response) {
+	public static void addCookie(String key, String value, HttpServletResponse response) {
 		userCookieGenerator.setCookieName(key);
 		userCookieGenerator.addCookie(response, value);
 	}
 	
-	public void removeCookie(HttpServletResponse response) {
+	public static void removeCookie(HttpServletResponse response) {
 		userCookieGenerator.setCookieName(USER_ID);
 		userCookieGenerator.addCookie(response, "");
 		userCookieGenerator.setCookieName(PROVIDER_ID);
 		userCookieGenerator.addCookie(response, "");
 	}
 	
-	public String readCookieValue(String key, HttpServletRequest request) {
+	public static String readCookieValue(String key, HttpServletRequest request) {
 		userCookieGenerator.setCookieName(key);
 		Cookie[] cookies = request.getCookies();
 		if (cookies == null) {
@@ -63,8 +59,14 @@ public final class UserCookieGenerator {
 		return null;
 	}
 	
-//	public void setCookieName(String name) {
-//		userCookieGenerator.setCookieName(name);
-//	}
+	public static String getDecryptedValue(String key, HttpServletRequest request) {
+		String encrypted = readCookieValue(key,request);
+		return HashManager.decrypt(encrypted);
+	}
+	
+	public static void addEncryptedCookie(String key, String value, HttpServletResponse response) {
+		String encrypted = HashManager.encrypt(value);
+		addCookie(key,encrypted,response);
+	}
 
 }

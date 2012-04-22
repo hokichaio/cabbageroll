@@ -23,7 +23,7 @@
 			</c:if>
 			
 			<p>${enq.questions[qNo].description}</p>
-			<c:if test="<%= SecurityContext.userSignedIn() %>">
+			<c:if test="<%= SecurityContext.userSignedIn(request) %>">
 			<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
 				<c:forEach var="choice" items="${enq.questions[qNo].choices}" varStatus="status" >
 					<p><button type="button" class="btn btn-primary" onclick="choose(${status.index});">!</button>${choice.message}</p>
@@ -33,7 +33,7 @@
 				<input type="hidden" id="cNo" name="cNo" value=""/>
 			</form:form>
 			</c:if>
-			<c:if test="<%= !SecurityContext.userSignedIn() %>">
+			<c:if test="<%= !SecurityContext.userSignedIn(request) %>">
 				<c:forEach var="choice" items="${enq.questions[qNo].choices}" varStatus="status" >
 					<p><a data-toggle="modal" href="#loginModal" class="btn btn-primary" >!</a>${choice.message}</p>
 				</c:forEach>

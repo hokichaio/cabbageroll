@@ -20,7 +20,8 @@
 					<label class="control-label" for="type">Type</label>
 					<div class="controls">
 						<label class="radio">
-			                <form:radiobutton id="type" path="type" value="1" checked="true" /> Single Qustion
+			                <form:radiobutton id="type1" path="type" value="1" checked="true" /> Single Qustion
+			                <form:radiobutton id="type2" path="type" value="2" />Multiple Questions
         				</label>
 					</div>
 				</div>
@@ -82,17 +83,10 @@
 <script>
 var i = 0;
 $(function() {
-	$("#media_flg").click(function() {
-		if($("#media_flg").is(':checked')) {
-			$(".media_type").removeAttr("disabled");
-			$("#media_content").show();
-		} else {
-			$(".media_type").attr("disabled", "disabled" );
-			$("#media_content").hide();
-		}
-  	});
-});
-$(function() {
+	$("#type2").click(function() {
+		
+		
+	});
 	$("#media_type_radio_1").click(function() {
 		$("#media_uri").hide();
 		$("#media_fileuploader").show();
@@ -104,6 +98,15 @@ $(function() {
 	$("#media_type_radio_3").click(function() {
 		$("#media_fileuploader").hide();
 		$("#media_uri").show();
+  	});
+	$("#media_flg").click(function() {
+		if($("#media_flg").is(':checked')) {
+			$(".media_type").removeAttr("disabled");
+			$("#media_content").show();
+		} else {
+			$(".media_type").attr("disabled", "disabled" );
+			$("#media_content").hide();
+		}
   	});
 });
 addChoice = function() {

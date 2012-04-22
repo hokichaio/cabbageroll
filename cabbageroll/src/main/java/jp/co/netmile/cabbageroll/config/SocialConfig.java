@@ -36,7 +36,6 @@ import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 
 import jp.co.netmile.cabbageroll.social.SecurityContext;
 import jp.co.netmile.cabbageroll.social.SignUp;
-import jp.co.netmile.cabbageroll.social.User;
 
 
 /**
@@ -77,24 +76,24 @@ public class SocialConfig {
 		return repository;
 	}
 
-	/**
-	 * Request-scoped data access object providing access to the current user's connections.
-	 */
-	@Bean
-	@Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)
-	public ConnectionRepository connectionRepository() {
-	    User user = SecurityContext.getCurrentUser();
-	    return usersConnectionRepository().createConnectionRepository(user.getId());
-	}
-
-	/**
-	 * A proxy to a request-scoped object representing the current user's primary Facebook account.
-	 * @throws NotConnectedException if the user is not connected to facebook.
-	 */
-	@Bean
-	@Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)	
-	public Facebook facebook() {
-	    return connectionRepository().getPrimaryConnection(Facebook.class).getApi();
-	}
+//	/**
+//	 * Request-scoped data access object providing access to the current user's connections.
+//	 */
+//	@Bean
+//	@Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)
+//	public ConnectionRepository connectionRepository() {
+//	    User user = SecurityContext.getCurrentUser();
+//	    return usersConnectionRepository().createConnectionRepository(user.getId());
+//	}
+//
+//	/**
+//	 * A proxy to a request-scoped object representing the current user's primary Facebook account.
+//	 * @throws NotConnectedException if the user is not connected to facebook.
+//	 */
+//	@Bean
+//	@Scope(value="request", proxyMode=ScopedProxyMode.INTERFACES)	
+//	public Facebook facebook() {
+//	    return connectionRepository().getPrimaryConnection(Facebook.class).getApi();
+//	}
 
 }

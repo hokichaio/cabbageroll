@@ -1,4 +1,4 @@
-package jp.co.netmile.cabbageroll.controller;
+package jp.co.netmile.cabbageroll.aop;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,7 +9,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.RedirectView;
 
 import jp.co.netmile.cabbageroll.social.SecurityContext;
-import jp.co.netmile.cabbageroll.social.User;
 import jp.co.netmile.cabbageroll.util.UserCookieGenerator;
 
 /**
@@ -29,7 +28,7 @@ final public class AuthInterceptor extends HandlerInterceptorAdapter {
 	}
 	
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		rememberUser(request, response);
+//		rememberUser(request, response);
 //		if(requestForResources(request)) {
 //			return true;
 //		}
@@ -41,33 +40,32 @@ final public class AuthInterceptor extends HandlerInterceptorAdapter {
 //		} else {
 //			return requireSignIn(request, response);
 //		}
-		if (SecurityContext.userSignedIn() && request.getServletPath().startsWith("/signout")) {
-			connectionRepository.createConnectionRepository(SecurityContext.getCurrentUser().getId()).removeConnections("facebook");
+		if (request.getServletPath().startsWith("/signout")) {
+//			connectionRepository.createConnectionRepository(SecurityContext.getCurrentUser().getId()).removeConnections("facebook");
 			userCookieGenerator.removeCookie(response);
-			SecurityContext.remove();
 			new RedirectView("/", true).render(null, request, response);
 		}
 		return true;
 	}
 	
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-		SecurityContext.remove();
-	}
+//	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+//		SecurityContext.remove();
+//	}
 
 	// internal helpers
 
-	private void rememberUser(HttpServletRequest request, HttpServletResponse response) {
-		String userId = userCookieGenerator.readCookieValue(userCookieGenerator.USER_ID, request);
-		String pId = userCookieGenerator.readCookieValue(userCookieGenerator.PROVIDER_ID, request);
-		if (userId == null) {
-			return;
-		}
-		if (!userNotFound(userId)) {
-			userCookieGenerator.removeCookie(response);
-			return;
-		}
-		SecurityContext.setCurrentUser(new User(userId, pId));
-	}
+//	private void rememberUser(HttpServletRequest request, HttpServletResponse response) {
+//		String userId = userCookieGenerator.readCookieValue(userCookieGenerator.USER_ID, request);
+//		String pId = userCookieGenerator.readCookieValue(userCookieGenerator.PROVIDER_ID, request);
+//		if (userId == null) {
+//			return;
+//		}
+//		if (!userNotFound(userId)) {
+//			userCookieGenerator.removeCookie(response);
+//			return;
+//		}
+//		SecurityContext.setCurrentUser(new User(userId, pId));
+//	}
 
 //	private void handleSignOut(HttpServletRequest request, HttpServletResponse response) throws Exception {
 //		if (SecurityContext.userSignedIn() && request.getServletPath().startsWith("/signout")) {
@@ -77,16 +75,16 @@ final public class AuthInterceptor extends HandlerInterceptorAdapter {
 //		}
 //	}
 	
-	private boolean handleSignOut(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		if (SecurityContext.userSignedIn() && request.getServletPath().startsWith("/signout")) {
-			connectionRepository.createConnectionRepository(SecurityContext.getCurrentUser().getId()).removeConnections("facebook");
-			userCookieGenerator.removeCookie(response);
-			SecurityContext.remove();
-			new RedirectView("/", true).render(null, request, response);
-			return true;
-		}
-		return false;
-	}
+//	private boolean handleSignOut(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		if (SecurityContext.userSignedIn() && request.getServletPath().startsWith("/signout")) {
+//			connectionRepository.createConnectionRepository(SecurityContext.getCurrentUser().getId()).removeConnections("facebook");
+//			userCookieGenerator.removeCookie(response);
+//			SecurityContext.remove();
+//			new RedirectView("/", true).render(null, request, response);
+//			return true;
+//		}
+//		return false;
+//	}
 	
 	private boolean requestForResources(HttpServletRequest request) {
 		return request.getServletPath().startsWith("/resources");

@@ -12,6 +12,8 @@
 	<util:properties id="defaultProperties">
 		<prop key="facebook.clientId">112651685520077</prop>
 		<prop key="facebook.clientSecret">456c5b69f2ed08c12be2c310582752d1</prop>
+		<prop key="facebook.clientId.dev">439585696056411</prop>
+		<prop key="facebook.clientSecret.dev">87e3fb3c3ab232900bb8f204ef6c6001</prop>
 		<prop key="encryption.password">234eac3</prop>
 		<prop key="encryption.salt">sadfy9</prop>
 		<prop key="mongo.url">mongodb://studio-k:123456@ds031847.mongolab.com:31847/cabbageroll</prop>

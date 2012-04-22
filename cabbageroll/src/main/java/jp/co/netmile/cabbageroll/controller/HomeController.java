@@ -3,10 +3,13 @@ package jp.co.netmile.cabbageroll.controller;
 import java.io.IOException;
 import java.util.List;
 
-import jp.co.netmile.cabbageroll.dto.AnswerForm;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import jp.co.netmile.cabbageroll.dto.Enq;
 import jp.co.netmile.cabbageroll.service.EnqService;
 import jp.co.netmile.cabbageroll.social.SecurityContext;
+import jp.co.netmile.cabbageroll.util.UserCookieGenerator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,33 +24,30 @@ public class HomeController {
 	private EnqService enqService;
 	
 	@RequestMapping(value = "/")
-	public ModelAndView home() {
+	public ModelAndView home(HttpServletRequest request) {
 		
 		List<Enq> enqs;
 		
-		if(!SecurityContext.userSignedIn()) {
+		if(!SecurityContext.userSignedIn(request)) {
 			enqs = enqService.getEnqsRandomly();
 		} else {
-			enqs = enqService.getAvailableEnqs(SecurityContext.getCurrentUser().getpId());
+			enqs = enqService.getAvailableEnqs(SecurityContext.getPid(request));
 		}
 		
 		if(enqs==null || enqs.isEmpty()) {
 			return new ModelAndView("main/noEnq");
 		}
 		
-		ModelAndView modelAndView = new ModelAndView();
+		ModelAndView modelAndView = new ModelAndView("main/top");
 		modelAndView.addObject("enqs", enqs);
-		modelAndView.addObject("qNo", 0);
-		modelAndView.addObject("answerForm", new AnswerForm());
-		modelAndView.setViewName("main/top");
 		return modelAndView;
 	}
 	
 	@RequestMapping(value = "/create_init")
-	public ModelAndView createInit(Enq enq) {
+	public ModelAndView createInit(Enq enq, HttpServletRequest request) {
 		
-		if(!SecurityContext.userSignedIn()) {
-			return home();
+		if(!SecurityContext.userSignedIn(request)) {
+			return home(request);
 		}
 		
 		ModelAndView modelAndView = new ModelAndView();
@@ -57,12 +57,12 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/create")
-	public ModelAndView create(Enq enq) throws IllegalStateException, IOException {
+	public ModelAndView create(Enq enq, HttpServletRequest request) throws IllegalStateException, IOException {
 		
-		if(!SecurityContext.userSignedIn()) {
-			return home();
+		if(!SecurityContext.userSignedIn(request)) {
+			return home(request);
 		}
-		enq.setOwner(SecurityContext.getCurrentUser().getpId());
+		enq.setOwner(SecurityContext.getPid(request));
 		enqService.createEnq(enq);
 		
 		ModelAndView modelAndView = new ModelAndView();
@@ -82,20 +82,21 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/mypage") 
-	public ModelAndView myPage() {
-		if(!SecurityContext.userSignedIn()) {
-			return home();
+	public ModelAndView myPage(HttpServletRequest request) {
+		if(!SecurityContext.userSignedIn(request)) {
+			return home(request);
 		}
 		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("enqs", enqService.getHistory(SecurityContext.getCurrentUser().getpId()));
-		modelAndView.addObject("myenqs", enqService.getMyEnq(SecurityContext.getCurrentUser().getpId()));
+		modelAndView.addObject("enqs", enqService.getHistory(SecurityContext.getPid(request)));
+		modelAndView.addObject("myenqs", enqService.getMyEnq(SecurityContext.getPid(request)));
 		modelAndView.setViewName("main/mypage");
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/reload") 
-	public void reload() {
-		enqService.initPool();
+	@RequestMapping(value = "/signout")
+	public ModelAndView signout(HttpServletRequest request, HttpServletResponse response) {
+		UserCookieGenerator.removeCookie(response);
+		return home(request);
 	}
 	
 }

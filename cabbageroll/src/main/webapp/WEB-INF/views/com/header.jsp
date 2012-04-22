@@ -8,15 +8,10 @@
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
-			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</a>
 			<a class="brand" href="./">キャベツロール</a>
 			<div class="nav-collapse">
 				<ul class="nav pull-right">
-					<c:if test="<%= !SecurityContext.userSignedIn() %>">
+					<c:if test="<%= !SecurityContext.userSignedIn(request) %>">
 						<form class="navbar-form pull-right" name="login" id="login" action="<c:url value="/signin/facebook" />" method="POST">
 				 			<input type="hidden" name="scope" value="email,publish_stream,offline_access,friends_birthday" />
 							<ul class="nav pull-right">
@@ -24,9 +19,9 @@
 							</ul>
 						</form>
 					</c:if>
-					<c:if test="<%= SecurityContext.userSignedIn() %>">
+					<c:if test="<%= SecurityContext.userSignedIn(request) %>">
 						<li class="dropdown">
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <img id="profileImgS" src="https://graph.facebook.com/<%= SecurityContext.getCurrentUser().getpId() %>/picture" /> User <b class="caret"></b></a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <img id="profileImgS" src="https://graph.facebook.com/<%= SecurityContext.getPid(request) %>/picture" /> User <b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<a href="<c:url value="./create_init" />"><i class="icon-pencil"></i>Create</a>
 								<a href="./mypage"><i class="icon-user"></i>My Page</a>

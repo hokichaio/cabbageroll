@@ -182,6 +182,31 @@ public class EnqService {
 		Query query = Query.query(Criteria.where("owner").in(pid));
 		return mongoOperations.find(query, Enq.class);
 	}
+	/**
+	 * 次の未回答qnoを探す、すべて回答済みの場合はnull
+	 * @param enq
+	 * @return
+	 */
+	public Integer getQno(Enq enq, String pid) {
+		
+		Integer qNo = 0;
+		for(int i=0; i<enq.getQuestions().size(); i++) {
+			boolean flg = false;
+			Question q = enq.getQuestions().get(i);
+			for(Choice c : q.getChoices()) {
+				if(c.getAnswers().contains(pid)) {
+					qNo += 1;
+					flg = true;
+					break;
+				} 
+			}
+			if(flg) break;
+		}
+		if(qNo >= enq.getQuestions().size()) {
+			return null;
+		}
+		return qNo;
+	}
 	
 	@PostConstruct
 	public void initPool() {

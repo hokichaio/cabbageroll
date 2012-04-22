@@ -34,11 +34,5 @@
 		</div>
 	</div>
 	
-<script type="text/javascript">
-choose = function(cNo) {
-	$("#cNo").val(cNo);
-	document.answerForm.submit();
-}
-</script>
 </body>
 </html>

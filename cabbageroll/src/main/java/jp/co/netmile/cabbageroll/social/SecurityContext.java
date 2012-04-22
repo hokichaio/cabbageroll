@@ -15,32 +15,45 @@
  */
 package jp.co.netmile.cabbageroll.social;
 
+import javax.servlet.http.HttpServletRequest;
+
+import jp.co.netmile.cabbageroll.util.UserCookieGenerator;
+
 /**
  * Simple SecurityContext that stores the currently signed-in connection in a thread local.
  * @author Keith Donald
  */
 public final class SecurityContext {
 
-	private static final ThreadLocal<User> currentUser = new ThreadLocal<User>();
+//	private static final ThreadLocal<User> currentUser = new ThreadLocal<User>();
 
-	public static User getCurrentUser() {
-		User user = currentUser.get();
-		if (user == null) {
-			throw new IllegalStateException("No user is currently signed in");
-		}
-		return user;
+//	public static User getCurrentUser() {
+//		User user = currentUser.get();
+//		if (user == null) {
+//			throw new IllegalStateException("No user is currently signed in");
+//		}
+//		return user;
+//	}
+//
+//	public static void setCurrentUser(User user) {
+//		currentUser.set(user);
+//	}
+
+	public static boolean userSignedIn(HttpServletRequest request) {
+		String uid = UserCookieGenerator.getDecryptedValue(UserCookieGenerator.USER_ID, request);
+		return (uid != null && !uid.isEmpty());
+	}
+	
+	public static String getUid(HttpServletRequest request) {
+		return UserCookieGenerator.getDecryptedValue(UserCookieGenerator.USER_ID, request);
+	}
+	
+	public static String getPid(HttpServletRequest request) {
+		return UserCookieGenerator.getDecryptedValue(UserCookieGenerator.PROVIDER_ID, request);
 	}
 
-	public static void setCurrentUser(User user) {
-		currentUser.set(user);
-	}
-
-	public static boolean userSignedIn() {
-		return currentUser.get() != null;
-	}
-
-	public static void remove() {
-		currentUser.remove();
-	}
+//	public static void remove() {
+//		currentUser.remove();
+//	}
 	
 }
