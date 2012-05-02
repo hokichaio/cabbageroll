@@ -23,6 +23,12 @@ public class HomeController {
 	@Autowired
 	private EnqService enqService;
 	
+	@RequestMapping(value = "/signout")
+	public ModelAndView signout(HttpServletRequest request, HttpServletResponse response) {
+		UserCookieGenerator.removeCookie(response);
+		return new ModelAndView("redirect:/");
+	}
+	
 	@RequestMapping(value = "/")
 	public ModelAndView home(HttpServletRequest request) {
 		
@@ -91,12 +97,6 @@ public class HomeController {
 		modelAndView.addObject("myenqs", enqService.getMyEnq(SecurityContext.getPid(request)));
 		modelAndView.setViewName("main/mypage");
 		return modelAndView;
-	}
-	
-	@RequestMapping(value = "/signout")
-	public ModelAndView signout(HttpServletRequest request, HttpServletResponse response) {
-		UserCookieGenerator.removeCookie(response);
-		return home(request);
 	}
 	
 }

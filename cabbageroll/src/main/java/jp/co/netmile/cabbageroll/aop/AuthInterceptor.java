@@ -3,6 +3,7 @@ package jp.co.netmile.cabbageroll.aop;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.facebook.api.Facebook;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -20,8 +21,6 @@ import jp.co.netmile.cabbageroll.util.UserCookieGenerator;
 final public class AuthInterceptor extends HandlerInterceptorAdapter {
 
 	private final UsersConnectionRepository connectionRepository;
-	
-	private final UserCookieGenerator userCookieGenerator = new UserCookieGenerator();
 	
 	public AuthInterceptor(UsersConnectionRepository connectionRepository) {
 		this.connectionRepository = connectionRepository;
@@ -42,7 +41,7 @@ final public class AuthInterceptor extends HandlerInterceptorAdapter {
 //		}
 		if (request.getServletPath().startsWith("/signout")) {
 //			connectionRepository.createConnectionRepository(SecurityContext.getCurrentUser().getId()).removeConnections("facebook");
-			userCookieGenerator.removeCookie(response);
+//			userCookieGenerator.removeCookie(response);
 			new RedirectView("/", true).render(null, request, response);
 		}
 		return true;

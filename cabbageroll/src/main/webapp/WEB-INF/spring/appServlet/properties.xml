@@ -17,6 +17,7 @@
 		<prop key="encryption.password">234eac3</prop>
 		<prop key="encryption.salt">sadfy9</prop>
 		<prop key="mongo.url">mongodb://studio-k:123456@ds031847.mongolab.com:31847/cabbageroll</prop>
+		<prop key="cipher.key">iamnot790523akey3as4d38be</prop>
 		<!-- <prop key="mongo.url">mongodb://localhost:27017/cabbageroll</prop> -->
 	</util:properties>
 

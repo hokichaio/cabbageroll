@@ -1,5 +1,6 @@
 <aspectj>
 <aspects>
+<aspect name="jp.co.netmile.cabbageroll.aop.AdminInterceptor"/>
 </aspects>
 </aspectj>
 

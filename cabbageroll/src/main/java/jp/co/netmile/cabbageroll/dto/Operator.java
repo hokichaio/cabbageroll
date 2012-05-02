@@ -1,7 +1,11 @@
 package jp.co.netmile.cabbageroll.dto;
 
-public class Operator {
+import java.io.Serializable;
+
+public class Operator implements Serializable {
 	
+	private static final long serialVersionUID = 8023767296400783283L;
+
 	public static final String SESSION_KEY_OPERATOR = "OP";
 	
 	private String id;
