@@ -17,28 +17,22 @@
 			<fieldset>
 				<legend>Create a cabbageroll</legend>
 				<div class="control-group">
+					<label class="control-label" for="type">Type</label>
+					<div class="controls">
+						<label class="radio">
+			                <form:radiobutton id="type1" path="type" value="1" checked="true" /> Single Qustion
+						</label>
+						<label class="radio">
+			                <form:radiobutton id="type2" path="type" value="2" />Multiple Questions
+        				</label>
+					</div>
+				</div>
+				<div class="control-group">
 					<label class="control-label" for="title">Title</label>
 					<div class="controls docs-input-sizes">
 			        	<form:input class="input-xlarge" id="title" path="title" />
 					</div>
 				</div>
-				
-				
-				<ul class="nav nav-tabs">
-					<li class="active" id="tab1">
-						<a href="#Q1" data-toggle="Q1">Q1</a>
-					</li>
-					<li id="tabAdd">
-						<a href="javascript:void(0);" onclick="addQ();">+</a>
-					</li>
-				</ul>
-				
-				
-				<div class="tab-content">
-				<div class="tab-pane active" id="Q1">
-					
-				
-				
 				<div class="control-group">
 					<label class="control-label" for="media">Media</label>
 					<div class="controls">
@@ -89,23 +83,6 @@
 					<div class="controls" id="choice_list0">
 					</div>
 				</div>
-				
-				
-				
-				
-				
-				
-				
-				</div>
-				</div>
-				
-				
-				
-				
-				
-				
-				
-				
 				<div class="form-actions">
 					<input type="submit" class="btn btn-primary" value="Create!" />
 				</div>
@@ -113,23 +90,9 @@
 		</form:form>
 	</div>
 	</div>
-
-
 </body>
 <script>
 var i = 0;
-
-var questions = 1;
-
-function addQ() {
-	questions += 1;
-	$("#tabAdd").before('<li id="tab' + questions + '"><a href="#Q' + questions +'" data-toggle="Q' + questions + '">Q' + questions + '</a></li>');
-	$("#Q1").append('\
-			\
-			');
-	
-	
-}
 
 function useMedia(q) {
 	if($("#media_flg" + q).is(':checked')) {

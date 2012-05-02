@@ -4,21 +4,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import jp.co.netmile.cabbageroll.dto.User;
-import jp.co.netmile.cabbageroll.dto.facebook.EducationEntry;
-import jp.co.netmile.cabbageroll.dto.facebook.Profile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.mongodb.core.MongoOperations;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.facebook.api.Facebook;
-import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.stereotype.Service;
 
 

@@ -52,4 +52,12 @@ public class AsyncController {
 	           return "redirect:uploadFailure";
 	       }
 	}
+	
+	@RequestMapping(value = "/mqmaker")
+	public ModelAndView ModelAndView(@RequestParam("q") Integer questions) {
+		ModelAndView modelAndView = new ModelAndView("async/form_mq");
+		modelAndView.addObject("questions", questions);
+		return modelAndView;
+	}
+	
 }
