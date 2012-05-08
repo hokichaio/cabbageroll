@@ -54,9 +54,9 @@ public class AsyncController {
 	}
 	
 	@RequestMapping(value = "/mqmaker")
-	public ModelAndView ModelAndView(@RequestParam("q") Integer questions) {
-		ModelAndView modelAndView = new ModelAndView("async/form_mq");
-		modelAndView.addObject("questions", questions);
+	public ModelAndView ModelAndView(@RequestParam("qno") Integer qno) {
+		ModelAndView modelAndView = new ModelAndView("async/q_form");
+		modelAndView.addObject("qno", qno);
 		return modelAndView;
 	}
 	

@@ -67,9 +67,9 @@ public class IFrameController {
 			return modelAndView;
 		} else {
 			List<String> friends = facebookService.getFriends(SecurityContext.getUid(request));
-			Result result = enqService.getResult(enqId, SecurityContext.getPid(request), friends);
+			List<Result> results = enqService.getResults(enqId, SecurityContext.getPid(request), friends);
 			ModelAndView modelAndView = new ModelAndView();
-			modelAndView.addObject("result", result);
+			modelAndView.addObject("results", results);
 			modelAndView.addObject("enq", enq);
 			modelAndView.setViewName("iframe/result");
 			return modelAndView;

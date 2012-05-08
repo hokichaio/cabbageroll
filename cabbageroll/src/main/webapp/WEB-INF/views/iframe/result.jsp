@@ -33,44 +33,81 @@
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane" id="question">
-				<h3>${enq.title}</h3>
-				<c:if test="${enq.questions[0].multimedia.type == 1}">
-					<img src="<%= request.getContextPath() %>/resources/test/${enq.questions[0].multimedia.uri}"/>
-				</c:if>
-				<c:if test="${enq.questions[0].multimedia.type == 2}">
-					<iframe class="youtube" src="http://www.youtube.com/embed/${enq.questions[0].multimedia.uri}" frameborder="0" allowfullscreen></iframe>
-				</c:if>
-				<c:if test="${enq.questions[0].multimedia.type == 3}">
-					<img src="${enq.questions[0].multimedia.uri}"/>
-				</c:if>
-				<p>${enq.questions[0].description}</p>
-				<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
-					<c:forEach var="choice" items="${enq.questions[0].choices}" varStatus="status" >
-						<p>${status.index+1}. ${choice.message}</p>
+			
+				<ul class="nav nav-tabs">
+					<c:forEach var="q" items="${enq.questions}" varStatus="no" >
+						<li <c:if test="${no.index == 0}">class="active"</c:if> ><a href="#q${no.index}" data-toggle="tab">Q${no.index + 1}</a></li>
 					</c:forEach>
-				</form:form>
+				</ul>
+				
+				<div class="tab-content">
+					<c:forEach var="q" items="${enq.questions}" varStatus="no" >
+					<div class="tab-pane <c:if test="${no.index == 0}">active</c:if>" id="q${no.index}">
+					
+						<h3>${enq.title}</h3>
+						<c:if test="${q.multimedia.type == 1}">
+							<img src="<%= request.getContextPath() %>/resources/test/${q.multimedia.uri}"/>
+						</c:if>
+						<c:if test="${q.multimedia.type == 2}">
+							<iframe class="youtube" src="http://www.youtube.com/embed/${q.multimedia.uri}" frameborder="0" allowfullscreen></iframe>
+						</c:if>
+						<c:if test="${q.multimedia.type == 3}">
+							<img src="${q.multimedia.uri}"/>
+						</c:if>
+						<p>${q.description}</p>
+						<c:forEach var="choice" items="${q.choices}" varStatus="status" >
+							<p>${status.index+1}. ${choice.message}</p>
+						</c:forEach>
+					
+					</div>
+					</c:forEach>
+				</div>
+			
+			
+				
+				
+				
 			</div>
 			<div class="tab-pane active" id="result">
-			<img id="profile_frame" src="<%= request.getContextPath() %>/resources/img/com/profile_frame.jpg" />
-			<img id="profile_img" width="50" src="https://graph.facebook.com/${enq.owner}/picture" />
-			${result.title}
-			<br/>
-			<table class="pieChart">
-			    <!-- <tr><th>Choice</th> <th>Value</th> <th>PPL</th></tr> -->
-				<c:forEach var="choice" items="${result.choices}" varStatus="status" >
-					<tr>
-						<td>${choice.message}</td>
-						<td>${fn:length(choice.answers)}</td>
-						<td>
-							<c:forEach var="friend" items="${choice.friends}" varStatus="status" >
-								<img width="25" src="https://graph.facebook.com/${friend}/picture" />
-							</c:forEach>
-						</td>
-					</tr>
+			
+			
+			<ul class="nav nav-tabs">
+				<c:forEach var="result" items="${results}" varStatus="r" >
+					<li <c:if test="${r.index == 0}">class="active"</c:if> ><a href="#r${r.index}" data-toggle="tab">Q${r.index + 1}</a></li>
 				</c:forEach>
-			</table>
-			<div class="fb-like" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-send="false" data-layout="button_count" data-show-faces="true" data-font="segoe ui"></div>
-			<div class="fb-comments" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-num-posts="2"  ></div>
+			</ul>
+			<div class="tab-content">
+			<c:forEach var="result" items="${results}" varStatus="r" >
+				<div class="tab-pane <c:if test="${r.index == 0}">active</c:if>" id="r${r.index}">
+				
+				
+				<img id="profile_frame" src="<%= request.getContextPath() %>/resources/img/com/profile_frame.jpg" />
+				<img id="profile_img" width="50" src="https://graph.facebook.com/${enq.owner}/picture" />
+				${result.description}
+				<br/>
+				<table class="pieChart">
+				    <!-- <tr><th>Choice</th> <th>Value</th> <th>PPL</th></tr> -->
+					<c:forEach var="choice" items="${result.choices}" varStatus="status" >
+						<tr>
+							<td>${choice.message}</td>
+							<td>${fn:length(choice.answers)}</td>
+							<td>
+								<c:forEach var="friend" items="${choice.friends}" varStatus="status" >
+									<img width="25" src="https://graph.facebook.com/${friend}/picture" />
+								</c:forEach>
+							</td>
+						</tr>
+					</c:forEach>
+				</table>
+				<div class="fb-like" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-send="false" data-layout="button_count" data-show-faces="true" data-font="segoe ui"></div>
+				<div class="fb-comments" data-href="http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${result.enqId}" data-num-posts="2"  ></div>
+				
+				
+				</div>
+			</c:forEach>
+			</div>
+			
+			
 			</div>
 		</div>
 		</div>

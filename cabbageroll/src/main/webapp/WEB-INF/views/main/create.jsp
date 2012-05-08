@@ -23,88 +23,66 @@
 					</div>
 				</div>
 				
-				
 				<ul class="nav nav-tabs">
 					<li class="active" id="tab1">
-						<a href="#Q1" data-toggle="Q1">Q1</a>
+						<a href="#Q1" data-toggle="tab">Q1</a>
 					</li>
 					<li id="tabAdd">
 						<a href="javascript:void(0);" onclick="addQ();">+</a>
 					</li>
 				</ul>
 				
-				
-				<div class="tab-content">
-				<div class="tab-pane active" id="Q1">
+				<div class="tab-content" id="target">
+					<div class="tab-pane active" id="Q1">
+						
+						<div class="control-group">
+							<label class="control-label" for="media">Media</label>
+							<div class="controls">
+								<label class="checkbox inline">
+					                <input type="checkbox" id="media_flg0" name="questions[0].multimedia.type" onclick="useMedia(0);" value="0" /> Use
+		        				</label>
+							</div>
+						</div>
+						<div id="media_content0" class="control-group" style="display:none;">
+							<label class="control-label" >Media Type</label>
+							<div class="controls">
+		        				<label class="radio">
+					                <input type="radio" id="media_type_youtube" class="media_type" name="questions[0].multimedia.type" onclick="mUri(0);" value="2" /> Place a youtube link
+		        				</label>
+		        				<label class="radio">
+					                <input type="radio" id="media_type_imgurl" class="media_type" name="questions[0].multimedia.type" onclick="mUri(0);" value="3" /> Place an image link
+		        				</label>
+			        			<label>
+			        				<input class="media_type" type="file" name="questions[0].multimedia.file" id="media_fileuploader0" style="display:none;"/>
+			        			</label>
+		        				<label>
+			        				<input type="text" class="media_type input-xlarge" name="questions[0].multimedia.uri" id="media_uri0" style="display:none;"/>
+			        			</label>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="description">Description</label>
+							<div class="controls">
+					        	<textarea name="questions[0].description" cols="320" rows="5" ></textarea>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="type">Question Type</label>
+							<div class="controls">
+					        	<select name="questions[0].type" >
+					        		<option value="1" label="SA" />
+					        		<option value="2" label="MA" />
+					        	</select>
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="title"><input type="button" class="btn btn-primary btn-mini" onclick="addChoice(0)" value="AddChoice" /></label>
+							<div class="controls" id="choice_list0">
+							</div>
+						</div>
 					
-				
-				
-				<div class="control-group">
-					<label class="control-label" for="media">Media</label>
-					<div class="controls">
-						<label class="checkbox inline">
-			                <input type="checkbox" id="media_flg0" name="questions[0].multimedia.type" onclick="useMedia(0);" value="0" /> Use
-        				</label>
 					</div>
 				</div>
-				<div id="media_content0" class="control-group" style="display:none;">
-					<label class="control-label" >Media Type</label>
-					<div class="controls">
-						<!-- 
-						<label class="radio">
-			                <form:radiobutton id="media_type_upload" class="media_type" path="questions[0].multimedia.type" onclick="mUploader(0);" value="1" /> Upload a file
-        				</label>
-        				 -->
-        				<label class="radio">
-			                <form:radiobutton id="media_type_youtube" class="media_type" path="questions[0].multimedia.type" onclick="mUri(0);" value="2" /> Place a youtube link
-        				</label>
-        				<label class="radio">
-			                <form:radiobutton id="media_type_imgurl" class="media_type" path="questions[0].multimedia.type" onclick="mUri(0);" value="3" /> Place an image link
-        				</label>
-	        			<label>
-	        				<input class="media_type" type="file" name="questions[0].multimedia.file" id="media_fileuploader0" style="display:none;"/>
-	        			</label>
-        				<label>
-	        				<form:input class="media_type input-xlarge" path="questions[0].multimedia.uri" id="media_uri0" style="display:none;"/>
-	        			</label>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="description">Description</label>
-					<div class="controls">
-			        	<form:textarea path="questions[0].description" cols="320" rows="5" />
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="type">Question Type</label>
-					<div class="controls">
-			        	<form:select path="questions[0].type" >
-			        		<form:option value="1" label="SA" />
-			        		<form:option value="2" label="MA" />
-			        	</form:select>
-					</div>
-				</div>
-				<div class="control-group">
-					<label class="control-label" for="title"><input type="button" class="btn btn-primary btn-mini" onclick="addChoice(0)" value="AddChoice" /></label>
-					<div class="controls" id="choice_list0">
-					</div>
-				</div>
-				
-				
-				
-				
-				
-				
-				
-				</div>
-				</div>
-				
-				
-				
-				
-				
-				
-				
 				
 				<div class="form-actions">
 					<input type="submit" class="btn btn-primary" value="Create!" />
@@ -113,8 +91,6 @@
 		</form:form>
 	</div>
 	</div>
-
-
 </body>
 <script>
 var i = 0;
@@ -123,12 +99,20 @@ var questions = 1;
 
 function addQ() {
 	questions += 1;
-	$("#tabAdd").before('<li id="tab' + questions + '"><a href="#Q' + questions +'" data-toggle="Q' + questions + '">Q' + questions + '</a></li>');
-	$("#Q1").append('\
-			\
-			');
-	
-	
+	$("#tabAdd").before('<li id="tab' + questions + '"><a href="#Q' + questions +'" data-toggle="tab">Q' + questions + '</a></li>');
+	$.ajaxSetup({ cache: false });
+	cpnObj = jQuery.get("<%= request.getContextPath() %>/async/mqmaker?qno=" + (questions-1), null, function(){
+		if(cpnObj != '') {
+			$("#target").append(cpnObj.responseText);
+		}
+	});
+}
+
+function removeQ(q) {
+	$("#tab" + q).remove();
+	$("#Q" + q).remove();
+	$("#tab1").addClass("active");
+	$("#Q1").addClass("active");
 }
 
 function useMedia(q) {
@@ -148,15 +132,9 @@ function mUri(q) {
 	$("#media_fileuploader" + q).hide();
 	$("#media_uri" + q).show();
 }
-$(function() {
-	$("#type2").click(function() {
-		
-		
-	});
-});
 function addChoice(q) {
 	$("#choice_list" + q).append("<label class='c" + i + "' class='text'>");
-	$("#choice_list" + q).append("<input type='text' class='c" + i + "' name='questions[0].choices[" + i + "].message' />");
+	$("#choice_list" + q).append("<input type='text' class='c" + i + "' name='questions[" + q + "].choices[" + i + "].message' />");
 	$("#choice_list" + q).append("<input type='button' class='btn btn-primary btn-mini c" + i + "' onclick='removeChoice(" + i + ")' value='Remove' />");
 	$("#choice_list" + q).append("</label>");
 	i++;
@@ -164,14 +142,5 @@ function addChoice(q) {
 function removeChoice(i) {
 	$(".c" + i).remove();
 }
-
-//$.ajaxSetup({ cache: false });
-function MQ(q){
-	$("#cabbage").remove();
-	data = jQuery.get("/async/mqmaker?q=" + q, null, function(){
-		$("#container").append(data.responseText);
-		//document.getElementById("cpBanner").innerHTML = cpnObj.responseText;
-	});
-};
 </script>
 </html>
