@@ -41,15 +41,11 @@
 			</div>
 			<div class="tab-pane" id="title">
 				<h2>称号一覧</h2>
-				<div class="span12">
-					<i class="icon-glass"></i>制作中・・・
-				</div>
+				<i class="icon-glass"></i>制作中・・・
 			</div>
 			<div class="tab-pane" id="friends">
 				<h2>友達一覧</h2>
-				<div class="span12">
-					<i class="icon-glass"></i>制作中・・・
-				</div>
+				<i class="icon-glass"></i>制作中・・・
 			</div>
 			<div class="tab-pane" id="myenqs">
 				<h2>Myアンケート</h2>

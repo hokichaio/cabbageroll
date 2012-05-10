@@ -4,12 +4,8 @@
          contentType="text/html; charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<!DOCTYPE html>
-<html>
-<head>
-	<%@ include file="./com/meta.jsp"%>	
-</head>
-<body>
+<%@ page import="jp.co.netmile.cabbageroll.social.SecurityContext" %>
+		<div id="cabbage">
 			<img id="profile_frame" src="<%= request.getContextPath() %>/resources/img/com/profile_frame.jpg" />
 			<img id="profile_img" width="50" src="https://graph.facebook.com/${enq.owner}/picture" /> <h3>${enq.title}</h3>
 			<c:if test="${enq.questions[qNo].multimedia.type == 1}">
@@ -66,6 +62,7 @@
 					<a href="#" class="btn btn-primary" onclick="subLogin(); return false;" >Sign up</a>
 				</div>
 			</div>
+		</div>
 			
 <script type="text/javascript">
 function choose(cNo) {
@@ -76,8 +73,6 @@ function subLogin() {
 	parent.location = "<%= request.getContextPath() %>/signin";
 }
 </script>
-</body>
-</html>
 
 
 

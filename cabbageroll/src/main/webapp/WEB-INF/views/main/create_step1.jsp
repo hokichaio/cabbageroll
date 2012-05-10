@@ -13,13 +13,48 @@
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container" id="container">
 	<div id="cabbage">
-		<form:form class="form-horizontal" id="enq" modelAttribute="enq" name="enq" action="./create" method="post" enctype="multipart/form-data">
+		<form:form class="form-horizontal" id="enq" modelAttribute="enq" name="enq" action="./create_step2" method="post" enctype="multipart/form-data">
 			<fieldset>
 				<legend>Create a cabbageroll</legend>
-				<div class="control-group">
+				<ul style="list-style-type: none;">
+					<li style="float:left; vertical-align: middle;">
+						<div>
+							<div style="float:left;" >
+								<span style="color:red; font-size: 7pt; line-height: 0px;">Step 1</span><br/>
+								<span>Create Questions</span>
+							</div>
+							<i class="icon-chevron-right"></i>
+						</div>
+					</li>
+					<li style="float:left; vertical-align: middle;">
+						<div>
+							<div style="float:left;" >
+								<span style="font-size: 7pt; line-height: 0px;">Step 2</span><br/>
+								<span>Analyze</span>
+							</div>
+							<i class="icon-chevron-right"></i>
+						</div>
+					</li>
+				</ul>
+				
+				<div style="clear:both; padding-top: 20px"class="control-group">
 					<label class="control-label" for="title">Title</label>
 					<div class="controls docs-input-sizes">
 			        	<form:input class="input-xlarge" id="title" path="title" />
+					</div>
+				</div>
+				
+				<div class="control-group">
+					<label class="control-label" for="title">Option</label>
+					<div class="controls">
+						<label class="checkbox inline">
+				        	<form:checkbox id="diagnose" path="diagnose" value="true" onclick="diagnoseOnOff()"/>診断付き
+						</label>
+					</div>
+					<div class="controls">
+						<label class="checkbox inline">
+					        <form:checkbox id="advertise" path="advertise" value="true"/>広告付き
+						</label>
 					</div>
 				</div>
 				
@@ -34,7 +69,6 @@
 				
 				<div class="tab-content" id="target">
 					<div class="tab-pane active" id="Q1">
-						
 						<div class="control-group">
 							<label class="control-label" for="media">Media</label>
 							<div class="controls">
@@ -80,7 +114,6 @@
 							<div class="controls" id="choice_list0">
 							</div>
 						</div>
-					
 					</div>
 				</div>
 				
@@ -94,7 +127,7 @@
 </body>
 <script>
 var i = 0;
-
+var r = 0;
 var questions = 1;
 
 function addQ() {
@@ -117,10 +150,8 @@ function removeQ(q) {
 
 function useMedia(q) {
 	if($("#media_flg" + q).is(':checked')) {
-		//$(".media_type").removeAttr("disabled");
 		$("#media_content" + q).show();
 	} else {
-		//$(".media_type").attr("disabled", "disabled" );
 		$("#media_content" + q).hide();
 	}
 }
@@ -134,13 +165,35 @@ function mUri(q) {
 }
 function addChoice(q) {
 	$("#choice_list" + q).append("<label class='c" + i + "' class='text'>");
-	$("#choice_list" + q).append("<input type='text' class='c" + i + "' name='questions[" + q + "].choices[" + i + "].message' />");
-	$("#choice_list" + q).append("<input type='button' class='btn btn-primary btn-mini c" + i + "' onclick='removeChoice(" + i + ")' value='Remove' />");
+	$("#choice_list" + q).append("<input type='text' class='c" + i + "' name='questions[" + q + "].choices[" + i + "].message' placeholder='選択肢メッセージ' />");
+	$("#choice_list" + q).append("<input type='number' class='c" + i + " cp span1' name='questions[" + q + "].choices[" + i + "].value' style='display:none;' />");
+	$("#choice_list" + q).append("<i class='icon-remove c" + i + "' onclick='removeChoice(" + i + ")' style='cursor: pointer;' ></i>");
 	$("#choice_list" + q).append("</label>");
+	diagnoseOnOff();
 	i++;
 }
 function removeChoice(i) {
 	$(".c" + i).remove();
+}
+function diagnoseOnOff() {
+	if($("#diagnose").is(':checked')) {
+		$(".cp").show();
+		$("#tabAdd").after('<li class="cp" id="tab_rules"><a href="#rules" data-toggle="tab">Rules</a></li>');
+		$("#target").append('<div class="tab-pane" id="rules"><input type="button" class="btn btn-primary btn-mini" onclick="addRule()" value="AddRule" /></div>');
+	} else {
+		$(".cp").hide();
+		$("#tab_rules").remove();
+		$("#rules").remove();
+		$("#tab1").addClass("active");
+		$("#Q1").addClass("active");
+	}
+}
+function addRule() {
+	$("#rules").append("<div id='rule" + r + "'><input type='text' name='rules[" + r + "].s' class='input-small cp' /> ~ <input type='text' name='rules[" + r + "].l' class='input-small cp' /><i class='icon-remove' onclick='removeRule(" + r + ")' style='cursor: pointer;' ></i></div>");
+	r++;
+}
+function removeRule(i) {
+	$("#rule" + i).remove();
 }
 </script>
 </html>

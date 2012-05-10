@@ -9,6 +9,8 @@ public class Choice {
 	
 	private List<String> answers = new ArrayList<String>();
 	
+	private Integer value;
+	
 	public String getMessage() {
 		return message;
 	}
@@ -23,6 +25,14 @@ public class Choice {
 
 	public void setAnswers(List<String> answers) {
 		this.answers = answers;
+	}
+
+	public Integer getValue() {
+		return value;
+	}
+
+	public void setValue(Integer value) {
+		this.value = value;
 	}
 	
 }

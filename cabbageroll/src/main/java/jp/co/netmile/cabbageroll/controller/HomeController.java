@@ -6,8 +6,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jp.co.netmile.cabbageroll.dto.AnswerForm;
 import jp.co.netmile.cabbageroll.dto.Enq;
+import jp.co.netmile.cabbageroll.dto.Result;
 import jp.co.netmile.cabbageroll.service.EnqService;
+import jp.co.netmile.cabbageroll.service.FacebookService;
 import jp.co.netmile.cabbageroll.social.SecurityContext;
 import jp.co.netmile.cabbageroll.util.UserCookieGenerator;
 
@@ -58,7 +61,36 @@ public class HomeController {
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("enq", enq);
-		modelAndView.setViewName("main/create");
+		modelAndView.setViewName("main/create_step1");
+		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/create_step2")
+	public ModelAndView createStep1(Enq enq, HttpServletRequest request) {
+		
+		if(!SecurityContext.userSignedIn(request)) {
+			return home(request);
+		}
+		
+		if(enq.getQuestions()==null) {
+			Enq sessionEnq = (Enq)request.getSession().getAttribute("enq_create");
+			if(sessionEnq != null) {
+				ModelAndView modelAndView = new ModelAndView();
+				modelAndView.addObject("enq", sessionEnq);
+				modelAndView.setViewName("main/create_step2");
+				return modelAndView;
+			} else {
+				return createInit(enq, request);
+			}
+		}
+		
+		
+		enq.arrangeData();
+		request.getSession().setAttribute("enq_create", enq);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("enq", enq);
+		modelAndView.setViewName("main/create_step2");
 		return modelAndView;
 	}
 	
@@ -78,14 +110,14 @@ public class HomeController {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/goto") 
-	public ModelAndView gotoEnq(@RequestParam("enqId") String enqId) {
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("enqId", enqId);
-		modelAndView.setViewName("main/enq");
-		return modelAndView;
-	}
+//	@RequestMapping(value = "/goto") 
+//	public ModelAndView gotoEnq(@RequestParam("enqId") String enqId) {
+//		
+//		ModelAndView modelAndView = new ModelAndView();
+//		modelAndView.addObject("enqId", enqId);
+//		modelAndView.setViewName("main/enq");
+//		return modelAndView;
+//	}
 	
 	@RequestMapping(value = "/mypage") 
 	public ModelAndView myPage(HttpServletRequest request) {

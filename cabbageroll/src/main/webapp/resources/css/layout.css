@@ -40,4 +40,15 @@ body {
 .list {
 	margin-top: 10px;
 }
-	
+
+#preview {
+	padding-top:10px;
+	clear:both;
+}
+
+#sushiMenu {
+	position: fixed;
+	bottom: 0;
+	z-index: 1030;
+	margin-bottom: 0;
+}

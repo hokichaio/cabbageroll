@@ -78,22 +78,23 @@ public class EnqService {
 	public void createEnq(Enq enq) throws IllegalStateException, IOException {
 		
 		//Questions&Choicesの整理
-		List<Question> arrangedQuestions = new ArrayList<Question>();
-		for(Question q : enq.getQuestions()) {
-			if(q.getChoices() != null) {
-				arrangedQuestions.add(q);
-			}
-		}
-		enq.setQuestions(arrangedQuestions);
-		for(Question q : enq.getQuestions()) {
-			List<Choice> arrangedChoices = new ArrayList<Choice>();
-			for(Choice c : q.getChoices()) {
-				if(c.getMessage()!=null && !c.getMessage().isEmpty()) {
-					arrangedChoices.add(c);
-				}
-			}
-			q.setChoices(arrangedChoices);
-		}
+//		List<Question> arrangedQuestions = new ArrayList<Question>();
+//		for(Question q : enq.getQuestions()) {
+//			if(q.getChoices() != null) {
+//				arrangedQuestions.add(q);
+//			}
+//		}
+//		enq.setQuestions(arrangedQuestions);
+//		for(Question q : enq.getQuestions()) {
+//			List<Choice> arrangedChoices = new ArrayList<Choice>();
+//			for(Choice c : q.getChoices()) {
+//				if(c.getMessage()!=null && !c.getMessage().isEmpty()) {
+//					arrangedChoices.add(c);
+//				}
+//			}
+//			q.setChoices(arrangedChoices);
+//		}
+		enq.arrangeData();
 		
 		//END_DATEの計算
 		Calendar now = Calendar.getInstance();
@@ -142,10 +143,20 @@ public class EnqService {
 	}
 	
 	public void registAnswer(AnswerForm answerForm, String pid) {
-		Query query = Query.query(Criteria.where("_id").is(answerForm.getEnqId()).andOperator(Criteria.where("questions." + answerForm.getqNo() + ".choices.answers").nin(pid)));
-		Update update = new Update();
-		update.addToSet("questions."+ answerForm.getqNo() +".choices." + answerForm.getcNo() + ".answers", pid);
-		mongoOperations.updateFirst(query, update, Enq.class);
+		Enq enq = getEnqById(answerForm.getEnqId());
+		if(enq.getQuestions().get(answerForm.getqNo()).getType().equals(Question.TYPE_SA)) {
+			Query query = Query.query(Criteria.where("_id").is(answerForm.getEnqId()).andOperator(Criteria.where("questions." + answerForm.getqNo() + ".choices.answers").nin(pid)));
+			Update update = new Update();
+			update.addToSet("questions."+ answerForm.getqNo() +".choices." + answerForm.getcNo() + ".answers", pid);
+			mongoOperations.updateFirst(query, update, Enq.class);
+		}else if(enq.getQuestions().get(answerForm.getqNo()).getType().equals(Question.TYPE_MA)) {
+			for(Integer cNo : answerForm.getcNos()) {
+				Query query = Query.query(Criteria.where("_id").is(answerForm.getEnqId()).andOperator(Criteria.where("questions." + answerForm.getqNo() + ".choices." + answerForm.getcNo() + ".answers").nin(pid)));
+				Update update = new Update();
+				update.addToSet("questions."+ answerForm.getqNo() +".choices." + cNo + ".answers", pid);
+				mongoOperations.updateFirst(query, update, Enq.class);
+			}
+		}
 	}
 	
 	public Enq getEnqRandomly() {

@@ -1,5 +1,7 @@
 package jp.co.netmile.cabbageroll.dto;
 
+import java.util.List;
+
 public class AnswerForm {
 	
 	private String enqId;
@@ -7,6 +9,8 @@ public class AnswerForm {
 	private Integer qNo;
 	
 	private Integer cNo;
+	
+	private List<Integer> cNos;
 
 	public String getEnqId() {
 		return enqId;
@@ -30,6 +34,14 @@ public class AnswerForm {
 
 	public void setcNo(Integer cNo) {
 		this.cNo = cNo;
+	}
+
+	public List<Integer> getcNos() {
+		return cNos;
+	}
+
+	public void setcNos(List<Integer> cNos) {
+		this.cNos = cNos;
 	}
 	
 }

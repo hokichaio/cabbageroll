@@ -14,7 +14,7 @@
 	<div class="container">
 		<div id="cabbage">
 			<div style="text-align:center;">
-				<h1>WHAT!? NO ENQ...</h1>
+				<h1>WHAT!? NO MORE CABBAGE!?</h1>
 			</div>
 		</div>
 	</div>

@@ -14,25 +14,41 @@
     <div id="fb-root"></div>
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
-		<div id="myCarousel" class="carousel" style="text-align:center;">
-		  <!-- Carousel items -->
-		  <div class="carousel-inner">
-		  
-		  	<c:forEach var="enq" items="${enqs}" varStatus="status" >
-		  		<c:if test="${status.index==0}" >
-					<div class="active item"><iframe class="enq" src="<%= request.getContextPath() %>/iframe/goto?enqId=${enq.id}" seamless frameborder=0></iframe></div>
-				</c:if>
-				<c:if test="${status.index!=0}" >
-					<div class="item"><iframe class="enq" src="<%= request.getContextPath() %>/iframe/goto?enqId=${enq.id}" seamless frameborder=0></iframe></div>
-				</c:if>
+	
+		<div id="target">
+		</div>
+		
+		<div id="sushiMenu">
+			<c:forEach var="enq" items="${enqs}" varStatus="status" >
+				<input type="button" onclick="findenq('${enq.id}');" value="press" />
 			</c:forEach>
-		    
-		  </div>
-		  <!-- Carousel nav -->
-		  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-		  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
 		</div>
 	</div>
+<script>
+
+function findenq(enqId){
+	$.ajaxSetup({ cache: false });
 	
+	$("#target").fadeOut("fast", function(){
+		$("#target").load("<%= request.getContextPath() %>/async/goto?enqId=" + enqId, false, function() {
+			$("#target").fadeIn("fast");
+		});
+	});
+	return false;
+	
+}
+
+$(function(){
+	$('form').submit(function(){
+		var postData = {};
+		$('form').find(':input').each(function(){
+			postData[$(this).attr('name')] = $(this).val();
+		});
+		$.post('<%= request.getContextPath() %>/async/answer',postData);
+		return false;
+    });
+});
+
+</script>
 </body>
 </html>
