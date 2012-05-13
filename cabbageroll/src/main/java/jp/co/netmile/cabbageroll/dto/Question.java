@@ -7,13 +7,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Question {
 	
+	public static final int TYPE_SA = 1;
+	
+	public static final int TYPE_MA = 2;
+	
 	private Multimedia multimedia;
 	
 	private String description;
 	
 	private List<Choice> choices;
 	
-	private int i;
+	private Integer type;
 	
 	public Multimedia getMultimedia() {
 		return multimedia;
@@ -37,6 +41,14 @@ public class Question {
 
 	public void setChoices(List<Choice> choices) {
 		this.choices = choices;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	public int getAnswered() {

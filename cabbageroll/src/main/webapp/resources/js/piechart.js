@@ -89,7 +89,7 @@ var PieChart = new Class({
 		}).injectBottom(this.container).addClass('pieChartMap');
 		
 		// Insert the blank transparent gif that is used for the image map
-		new Asset.image('/resources/img/com/spacer.gif', {
+		new Asset.image('/cabbageroll/resources/img/com/spacer.gif', {
 			alt: '',
 			usemap: '#pieChartMap' + this.tableIndex,
 			width: this.pieChartDiameter,
@@ -181,18 +181,18 @@ var PieChart = new Class({
     		///// STEP 4 - Draw pie on image map
 		
 			var arcIncrement = (arcEndAngle - arcStartAngle) * this.arcIncrementMultiplier;
-			console.log("start" + arcStartAngle);
-			console.log("end" + arcEndAngle);
+			//console.log("start" + arcStartAngle);
+			//console.log("end" + arcEndAngle);
 			var xx = this.pieChartRadius + Math.round(Math.cos(arcStartAngle) * this.pieChartRadius);
 			var yy = this.pieChartRadius + Math.round(Math.sin(arcStartAngle) * this.pieChartRadius);
-			console.log("xx" + xx);
-			console.log("yy" + yy);
+			//console.log("xx" + xx);
+			//console.log("yy" + yy);
 			var coord = [];
 			var coordIndex = 1;
 						
 			for (i = 0; i < ((this.pieVertices * 2) - 2); i = i+2) {				
 				var arcAngle = arcStartAngle + arcIncrement * coordIndex;
-				console.log("arcAngle" + arcAngle);
+				//console.log("arcAngle" + arcAngle);
 				coord[i] = this.pieChartRadius + Math.round(Math.cos(arcAngle) * this.pieChartRadius);				
 				coord[i+1] = this.pieChartRadius + Math.round(Math.sin(arcAngle) * this.pieChartRadius);
 				coordIndex++;			

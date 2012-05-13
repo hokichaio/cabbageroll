@@ -4,14 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.ResourceBundle;
-
-import javax.annotation.PostConstruct;
 
 import jp.co.netmile.cabbageroll.dto.AnswerForm;
 import jp.co.netmile.cabbageroll.dto.Choice;
@@ -43,54 +40,40 @@ public class EnqService {
 	
 	private List<Enq> enqPool;
 	
-	public Result getResult(String enqId, String pid, List<String> frineds) {
+	public List<Result> getResults(String enqId, String pid, List<String> frineds) {
 		
-		Result result = new Result();
+		
 		Enq enq = getEnqById(enqId);
 		
-		if(!isAnswered(enq,pid)) return null;
+		if(!enq.checkShowResult(enq,pid)) return null;
 		
-		result.setEnqId(enqId);
-		if(enq.getType().equals(Enq.TYPE_SQ)) {
-			result.setType(enq.getType());
-			result.setTitle(enq.getTitle());
-			List<Choice> choices = enq.getQuestions().get(0).getChoices();
+		List<Result> results = new ArrayList<Result>();
+		
+		for(Question q: enq.getQuestions()) {
+			Result result = new Result();
+			result.setEnqId(enqId);
+			result.setDescription(q.getDescription());
+			List<Choice> choices = q.getChoices();
 			
 			List<ChoiceAsResult> cResultList = new ArrayList<ChoiceAsResult>();
-			
 			for(Choice c : choices) {
 				ChoiceAsResult cResult = new ChoiceAsResult(c);
 				for(String aId : c.getAnswers()) {
-					if(frineds.contains(aId)) cResult.addFriend(aId);
+					if(frineds != null && frineds.contains(aId)) cResult.addFriend(aId);
 				}
 				cResultList.add(cResult);
 			}
 			result.setChoices(cResultList);
+			results.add(result);
 		}
 		
-		return result;
+		return results;
 		
 	}
 	
 	public void createEnq(Enq enq) throws IllegalStateException, IOException {
 		
-		//Questions&Choicesの整理
-		List<Question> arrangedQuestions = new ArrayList<Question>();
-		for(Question q : enq.getQuestions()) {
-			if(q.getChoices() != null) {
-				arrangedQuestions.add(q);
-			}
-		}
-		enq.setQuestions(arrangedQuestions);
-		for(Question q : enq.getQuestions()) {
-			List<Choice> arrangedChoices = new ArrayList<Choice>();
-			for(Choice c : q.getChoices()) {
-				if(c.getMessage()!=null && !c.getMessage().isEmpty()) {
-					arrangedChoices.add(c);
-				}
-			}
-			q.setChoices(arrangedChoices);
-		}
+		enq.arrangeData();
 		
 		//END_DATEの計算
 		Calendar now = Calendar.getInstance();
@@ -139,10 +122,20 @@ public class EnqService {
 	}
 	
 	public void registAnswer(AnswerForm answerForm, String pid) {
-		Query query = Query.query(Criteria.where("_id").is(answerForm.getEnqId()).andOperator(Criteria.where("questions.choices.answers").nin(pid)));
-		Update update = new Update();
-		update.addToSet("questions."+ answerForm.getqNo() +".choices." + answerForm.getcNo() + ".answers", pid);
-		mongoOperations.updateFirst(query, update, Enq.class);
+		Enq enq = getEnqById(answerForm.getEnqId());
+		if(enq.getQuestions().get(answerForm.getqNo()).getType().equals(Question.TYPE_SA)) {
+			Query query = Query.query(Criteria.where("_id").is(answerForm.getEnqId()).andOperator(Criteria.where("questions." + answerForm.getqNo() + ".choices.answers").nin(pid)));
+			Update update = new Update();
+			update.addToSet("questions."+ answerForm.getqNo() +".choices." + answerForm.getcNo() + ".answers", pid);
+			mongoOperations.updateFirst(query, update, Enq.class);
+		}else if(enq.getQuestions().get(answerForm.getqNo()).getType().equals(Question.TYPE_MA)) {
+			for(Integer cNo : answerForm.getcNos()) {
+				Query query = Query.query(Criteria.where("_id").is(answerForm.getEnqId()).andOperator(Criteria.where("questions." + answerForm.getqNo() + ".choices." + answerForm.getcNo() + ".answers").nin(pid)));
+				Update update = new Update();
+				update.addToSet("questions."+ answerForm.getqNo() +".choices." + cNo + ".answers", pid);
+				mongoOperations.updateFirst(query, update, Enq.class);
+			}
+		}
 	}
 	
 	public Enq getEnqRandomly() {
@@ -191,16 +184,13 @@ public class EnqService {
 		
 		Integer qNo = 0;
 		for(int i=0; i<enq.getQuestions().size(); i++) {
-			boolean flg = false;
 			Question q = enq.getQuestions().get(i);
 			for(Choice c : q.getChoices()) {
 				if(c.getAnswers().contains(pid)) {
 					qNo += 1;
-					flg = true;
 					break;
 				} 
 			}
-			if(flg) break;
 		}
 		if(qNo >= enq.getQuestions().size()) {
 			return null;
@@ -208,28 +198,14 @@ public class EnqService {
 		return qNo;
 	}
 	
-	@PostConstruct
+//	@PostConstruct
 	public void initPool() {
 		this.enqPool = mongoOperations.findAll(Enq.class);
 	}
 	
-	private boolean isAnswered(Enq enq, String pid) {
-		boolean isAnswered = false;
-		if(enq.getEndDate().after(new Date())) {
-			for(Question q : enq.getQuestions()) {
-				for(Choice c : q.getChoices()) {
-					if(c.getAnswers().contains(pid)) {
-						isAnswered = true;
-						break;
-					}
-				}
-				if(isAnswered) break;
-			}
-		} else {
-			isAnswered = true;
-		}
-		return isAnswered;
+	public void delEnq(String enqId, String pid) {
+		Query query = Query.query(Criteria.where("_id").is(enqId).andOperator(Criteria.where("owner").is(pid)));
+		mongoOperations.findAndRemove(query, Enq.class);
 	}
-	
 	
 }

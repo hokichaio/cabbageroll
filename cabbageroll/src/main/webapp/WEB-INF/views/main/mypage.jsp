@@ -41,26 +41,22 @@
 			</div>
 			<div class="tab-pane" id="title">
 				<h2>称号一覧</h2>
-				<div class="span12">
-					<i class="icon-glass"></i>制作中・・・
-				</div>
+				<i class="icon-glass"></i>制作中・・・
 			</div>
 			<div class="tab-pane" id="friends">
 				<h2>友達一覧</h2>
-				<div class="span12">
-					<i class="icon-glass"></i>制作中・・・
-				</div>
+				<i class="icon-glass"></i>制作中・・・
 			</div>
 			<div class="tab-pane" id="myenqs">
 				<h2>Myアンケート</h2>
 				<br/>
-				<table class="table table-striped">
+				<table class="table table-striped" id="target">
 					<tr><th>タイトル</th><th>回答者数</th><th>削除</th></tr>
 					<c:forEach var="myenq" items="${myenqs}" >
 						<tr>
 							<td><a href="./goto?enqId=${myenq.id}">${myenq.title}</a></td>
 							<td>${myenq.questions[0].answered}</td>
-							<td><i class="icon-trash"></i></td>
+							<td><i class="icon-trash" onclick="delEnq('${myenq.id}');" style='cursor: pointer;'></i></td>
 						</tr>
 					</c:forEach>
 				</table>
@@ -68,5 +64,14 @@
 		</div>
 	</div>
 	</div>
+<script>
+function delEnq(enqId){
+	console.log("ok");
+	jQuery.get("<%= request.getContextPath() %>/async/del_enq?enqId=" + enqId, function(data) {
+        jQuery("#target").empty().append(data);
+    });
+	return false;
+}
+</script>
 </body>
 </html>

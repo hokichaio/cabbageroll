@@ -10,44 +10,84 @@
 	<%@ include file="../com/meta.jsp"%>	
 </head>
 <body>
-	<script src="http://connect.facebook.net/en_US/all.js"></script>
-    <div id="fb-root"></div>
 	<%@ include file="../com/header.jsp"%>	
-	<div class="container" style="text-align:center;">
-			<iframe class="enq" src="<%= request.getContextPath() %>/iframe/goto?enqId=${enqId}" seamless frameborder=0></iframe>
-	</div>
+	<div id="container">
+		<div id="cabbage">
 	
+			<img id="profile_frame" src="<%= request.getContextPath() %>/resources/img/com/profile_frame.jpg" />
+			<img id="profile_img" width="50" src="https://graph.facebook.com/${enq.owner}/picture" /> <h3>${enq.title}</h3>
+			<c:if test="${enq.questions[qNo].multimedia.type == 1}">
+				<div><img src="<%= request.getContextPath() %>/resources/test/${enq.questions[qNo].multimedia.uri}"/></div>
+			</c:if>
+			<c:if test="${enq.questions[qNo].multimedia.type == 2}">
+				<iframe class="youtube" src="http://www.youtube.com/embed/${enq.questions[qNo].multimedia.uri}?rel=0&amp;autohide=1&amp;showinfo=0&amp;wmode=transparent" frameborder="0" allowfullscreen="" ></iframe>
+			</c:if>
+			<c:if test="${enq.questions[qNo].multimedia.type == 3}">
+				<div><img src="${enq.questions[qNo].multimedia.uri}"/></div>
+			</c:if>
+			
+			<p>${enq.questions[qNo].description}</p>
+			<c:if test="<%= SecurityContext.userSignedIn(request) %>">
+				<c:if test="${enq.questions[qNo].type == 1 }" >
+					<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
+						<c:forEach var="choice" items="${enq.questions[qNo].choices}" varStatus="status" >
+							<p><button type="button" class="btn btn-primary" onclick="choose(${status.index});">!</button>${choice.message}</p>
+						</c:forEach>
+						<input type="hidden" name="enqId" value="${enq.id}"/>
+						<input type="hidden" name="qNo" value="${qNo}"/>
+						<input type="hidden" id="cNo" name="cNo" value=""/>
+					</form:form>
+				</c:if>
+				<c:if test="${enq.questions[qNo].type == 2 }" >
+					<form:form id="answerForm" modelAttribute="answerForm" name="answerForm" action="./answer" method="post">
+						<c:forEach var="choice" items="${enq.questions[qNo].choices}" varStatus="status" >
+							<p><form:checkbox path="cNos" value="${status.index}"/>${choice.message}</p>
+						</c:forEach>
+						<input type="hidden" name="enqId" value="${enq.id}"/>
+						<input type="hidden" name="qNo" value="${qNo}"/>
+						<div class="form-actions">
+							<input type="button" class="btn btn-primary" onclick="submitForm();" value="Submit!" />
+						</div>
+					</form:form>
+				</c:if>
+			</c:if>
+			<c:if test="<%= !SecurityContext.userSignedIn(request) %>">
+				<c:forEach var="choice" items="${enq.questions[qNo].choices}" varStatus="status" >
+					<p><a data-toggle="modal" href="#loginModal" class="btn btn-primary" >!</a>${choice.message}</p>
+				</c:forEach>
+			</c:if>
+			<div  class="modal hide fade" id="loginModal">
+				<div class="modal-header">
+					<a class="close" data-dismiss="modal">×</a>
+					<h3>利用規約</h3>
+				</div>
+				<div class="modal-body">
+							<h3>Sign upをクリックして、アプリを利用してください。</h3>
+							<p>注意：このアプリはまだ未完成です。</p>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn" data-dismiss="modal">Close</a>
+					<a href="#" class="btn btn-primary" onclick="subLogin(); return false;" >Sign up</a>
+				</div>
+			</div>
+			
+		</div>
+	</div>
 <script type="text/javascript">
-choose = function(cNo) {
+function choose(cNo) {
 	$("#cNo").val(cNo);
 	document.answerForm.submit();
 }
-FB.init({appId: '112651685520077', xfbml: true, cookie: true});
-postWall = function() {
-	var messageStr = '${enq.title}<br/>${enq.questions[qNo].description}';
-	var pic = ''
-	FB.ui({ 
-		method: 'feed',
-		caption: messageStr,
-		name: 'Playing With Cabbageroll Now',
-		<c:if test="${enq.questions[qNo].multimedia.type == 1}">
-			picture: 'http://<%= request.getServerName() %><%= request.getContextPath() %>/resources/test/${enq.questions[qNo].multimedia.uri}"',
-		</c:if>
-		<c:if test="${enq.questions[qNo].multimedia.type == 2}">
-			picture: 'http://www.youtube.com/embed/${enq.questions[qNo].multimedia.uri}',
-		</c:if>
-		<c:if test="${enq.questions[qNo].multimedia.type == 3}">
-			picture: '${enq.questions[qNo].multimedia.uri}',
-		</c:if>
-		link: 'http://<%= request.getServerName() %><%= request.getContextPath() %>/goto?enqId=${enq.id}'
-	});
+function submitForm() {
+	document.answerForm.submit();
 }
-<c:if test="${postWallFlg}">
-	$(function() {
-		postWall();
-	});
-</c:if>
-$('.carousel').carousel(('pause'))
+function subLogin() {
+	location.href = "<%= request.getContextPath() %>/signin";
+}
 </script>
 </body>
 </html>
+
+
+
+

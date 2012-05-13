@@ -6,8 +6,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import jp.co.netmile.cabbageroll.dto.AnswerForm;
 import jp.co.netmile.cabbageroll.dto.Enq;
+import jp.co.netmile.cabbageroll.dto.Result;
 import jp.co.netmile.cabbageroll.service.EnqService;
+import jp.co.netmile.cabbageroll.service.FacebookService;
 import jp.co.netmile.cabbageroll.social.SecurityContext;
 import jp.co.netmile.cabbageroll.util.UserCookieGenerator;
 
@@ -23,24 +26,18 @@ public class HomeController {
 	@Autowired
 	private EnqService enqService;
 	
+	@Autowired
+	private FacebookService facebookService;
+	
+	@RequestMapping(value = "/signout")
+	public ModelAndView signout(HttpServletRequest request, HttpServletResponse response) {
+		UserCookieGenerator.removeCookie(response);
+		return new ModelAndView("redirect:/");
+	}
+	
 	@RequestMapping(value = "/")
 	public ModelAndView home(HttpServletRequest request) {
-		
-		List<Enq> enqs;
-		
-		if(!SecurityContext.userSignedIn(request)) {
-			enqs = enqService.getEnqsRandomly();
-		} else {
-			enqs = enqService.getAvailableEnqs(SecurityContext.getPid(request));
-		}
-		
-		if(enqs==null || enqs.isEmpty()) {
-			return new ModelAndView("main/noEnq");
-		}
-		
-		ModelAndView modelAndView = new ModelAndView("main/top");
-		modelAndView.addObject("enqs", enqs);
-		return modelAndView;
+		return new ModelAndView("main/top");
 	}
 	
 	@RequestMapping(value = "/create_init")
@@ -52,7 +49,35 @@ public class HomeController {
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("enq", enq);
-		modelAndView.setViewName("main/create");
+		modelAndView.setViewName("main/create_step1");
+		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/create_step2")
+	public ModelAndView createStep1(Enq enq, HttpServletRequest request) {
+		
+		if(!SecurityContext.userSignedIn(request)) {
+			return home(request);
+		}
+		
+		if(enq.getQuestions()==null) {
+			Enq sessionEnq = (Enq)request.getSession().getAttribute("enq_create");
+			if(sessionEnq != null) {
+				ModelAndView modelAndView = new ModelAndView();
+				modelAndView.addObject("enq", sessionEnq);
+				modelAndView.setViewName("main/create_step2");
+				return modelAndView;
+			} else {
+				return createInit(enq, request);
+			}
+		}
+		
+		enq.arrangeData();
+		request.getSession().setAttribute("enq_create", enq);
+		
+		ModelAndView modelAndView = new ModelAndView();
+		modelAndView.addObject("enq", enq);
+		modelAndView.setViewName("main/create_step2");
 		return modelAndView;
 	}
 	
@@ -67,16 +92,8 @@ public class HomeController {
 		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.addObject("enqId", enq.getId());
+		modelAndView.addObject("qNo", 0);
 		modelAndView.addObject("postWallFlg", true);
-		modelAndView.setViewName("main/enq");
-		return modelAndView;
-	}
-	
-	@RequestMapping(value = "/goto") 
-	public ModelAndView gotoEnq(@RequestParam("enqId") String enqId) {
-		
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.addObject("enqId", enqId);
 		modelAndView.setViewName("main/enq");
 		return modelAndView;
 	}
@@ -93,10 +110,53 @@ public class HomeController {
 		return modelAndView;
 	}
 	
-	@RequestMapping(value = "/signout")
-	public ModelAndView signout(HttpServletRequest request, HttpServletResponse response) {
-		UserCookieGenerator.removeCookie(response);
-		return home(request);
+	@RequestMapping(value = "/answer")
+	public ModelAndView answer(AnswerForm answerForm, HttpServletRequest request) {
+		
+		if(!SecurityContext.userSignedIn(request)) {
+			//TODO signin機能
+			return gotoEnq(answerForm.getEnqId(),request);
+		}
+		
+		enqService.registAnswer(answerForm, SecurityContext.getPid(request));
+		
+		return gotoEnq(answerForm.getEnqId(),request);
+	}
+	
+	
+	@RequestMapping(value = "/goto") 
+	public ModelAndView gotoEnq(@RequestParam("enqId") String enqId, HttpServletRequest request) {
+		
+		Enq enq = enqService.getEnqById(enqId);
+		
+		if(!SecurityContext.userSignedIn(request)) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("enq", enq);
+			modelAndView.addObject("qNo", 0);
+			modelAndView.addObject("answerForm", new AnswerForm());
+			modelAndView.setViewName("main/enq");
+			return modelAndView;
+		}
+		
+		Integer qNo = enqService.getQno(enq, SecurityContext.getPid(request));
+		
+		if(qNo != null) {
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("enq", enq);
+			modelAndView.addObject("qNo", qNo);
+			modelAndView.addObject("answerForm", new AnswerForm());
+			modelAndView.setViewName("main/enq");
+			return modelAndView;
+		} else {
+			List<String> friends = facebookService.getFriends(SecurityContext.getUid(request));
+			List<Result> results = enqService.getResults(enqId, SecurityContext.getPid(request), friends);
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("results", results);
+			modelAndView.addObject("enq", enq);
+			modelAndView.setViewName("main/result");
+			return modelAndView;
+		}
+		
 	}
 	
 }

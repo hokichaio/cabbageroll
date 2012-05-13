@@ -21,19 +21,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.util.CookieGenerator;
 
-/**
- * Utility class for managing the quick_start user cookie that remembers the signed-in user.
- * @author Keith Donald
- */
 public final class UserCookieGenerator {
+	
+	private static Encryptor encryptor;
 
 	private static final CookieGenerator userCookieGenerator = new CookieGenerator();
 	
 	public static final String USER_ID = "cabbageroll";
 	
 	public static final String PROVIDER_ID = "p";
-
+	
+	private static final int ONE_WEEK = 7 * 24 * 60 * 60; // for 1 week
+	
+	public UserCookieGenerator(Encryptor encryptor) {
+		UserCookieGenerator.encryptor = encryptor;
+	}
+	
 	public static void addCookie(String key, String value, HttpServletResponse response) {
+		userCookieGenerator.setCookieMaxAge(ONE_WEEK);
 		userCookieGenerator.setCookieName(key);
 		userCookieGenerator.addCookie(response, value);
 	}
@@ -61,12 +66,12 @@ public final class UserCookieGenerator {
 	
 	public static String getDecryptedValue(String key, HttpServletRequest request) {
 		String encrypted = readCookieValue(key,request);
-		return HashManager.decrypt(encrypted);
+		System.out.print(encryptor);
+		return encryptor.decrypt(encrypted);
 	}
 	
 	public static void addEncryptedCookie(String key, String value, HttpServletResponse response) {
-		String encrypted = HashManager.encrypt(value);
-		addCookie(key,encrypted,response);
+		addCookie(key,encryptor.encrypt(value),response);
 	}
 
 }

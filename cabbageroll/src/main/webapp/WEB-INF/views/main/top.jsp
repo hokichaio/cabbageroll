@@ -7,32 +7,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<%@ include file="../com/meta.jsp"%>	
+	<%@ include file="../com/meta.jsp"%>
+	<script>
+	<!--
+	jQuery.noConflict();
+	-->
+	</script>
+	<link type='text/css' href='<%= request.getContextPath() %>/resources/css/piechart.css' rel='stylesheet' />
+	<script type="text/javascript" src="<%= request.getContextPath() %>/resources/js/mootools-beta-1.2b2.js"></script> 
+	<script type='text/javascript' src='<%= request.getContextPath() %>/resources/js/piechart.js'></script>
+	<!--[if IE]>
+		<script type='text/javascript' src='<%= request.getContextPath() %>/resources/js/piechart.js'></script>
+	<![endif]-->
 </head>
 <body>
-	<script src="http://connect.facebook.net/en_US/all.js"></script>
-    <div id="fb-root"></div>
 	<%@ include file="../com/header.jsp"%>	
 	<div class="container">
-		<div id="myCarousel" class="carousel" style="text-align:center;">
-		  <!-- Carousel items -->
-		  <div class="carousel-inner">
-		  
-		  	<c:forEach var="enq" items="${enqs}" varStatus="status" >
-		  		<c:if test="${status.index==0}" >
-					<div class="active item"><iframe class="enq" src="<%= request.getContextPath() %>/iframe/goto?enqId=${enq.id}" seamless frameborder=0></iframe></div>
-				</c:if>
-				<c:if test="${status.index!=0}" >
-					<div class="item"><iframe class="enq" src="<%= request.getContextPath() %>/iframe/goto?enqId=${enq.id}" seamless frameborder=0></iframe></div>
-				</c:if>
-			</c:forEach>
-		    
-		  </div>
-		  <!-- Carousel nav -->
-		  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
-		  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
-		</div>
+
+		<div id="target"></div>
+		<%@ include file="../com/enqList.jsp"%>
+		
 	</div>
-	
 </body>
+<script>
+function submitForm() {
+	event.preventDefault();
+	jQuery.post('<%= request.getContextPath() %>/answer',jQuery("#answerForm").serialize(), function(data) {
+		var content = jQuery(data).find('#cabbage');
+		console.log(data);
+		jQuery("#target").empty().append(content);
+		new PieChart();
+    });
+	return false;
+}
+function choose(cNo) {
+	jQuery("#cNo").val(cNo);
+	submitForm();
+}
+function subLogin() {
+	parent.location = "<%= request.getContextPath() %>/signin";
+}
+</script>
 </html>

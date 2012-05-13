@@ -3,13 +3,13 @@ package jp.co.netmile.cabbageroll.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-
 public class Choice {
 
 	private String message;
 	
 	private List<String> answers = new ArrayList<String>();
+	
+	private Integer value;
 	
 	public String getMessage() {
 		return message;
@@ -25,6 +25,14 @@ public class Choice {
 
 	public void setAnswers(List<String> answers) {
 		this.answers = answers;
+	}
+
+	public Integer getValue() {
+		return value;
+	}
+
+	public void setValue(Integer value) {
+		this.value = value;
 	}
 	
 }
